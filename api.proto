@@ -1,10 +1,5 @@
 // protoc --go_out=plugins=grpc:. *.proto
 
-//Список эндпоинтов не реализованных:
-// * m.Post("/auth", hndAuthUser)    // авторизация сеанса
-// * m.Get("/logout", hndLogoutUser) // выход с сеанса
-
-
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
@@ -14,9 +9,15 @@ message NilReq {
 	bool Nil = 1;
 }
 
-message SeedPhraseResp {
+//+---- Account
+message SessionID {
+	string ID = 1;
+}
+
+message SeedPhrase {
 	string Mnemonic = 1;
 }
+//----- Account
 
 //+---- ATasks-OUT
 message AtasksOutReq {
@@ -506,31 +507,34 @@ message NewCoinInfoReq {
 //----- Wallet-Action
 
 service PlatformAPI {
-  rpc NewMnemonic(NilReq) returns (SeedPhraseResp) {}				// получить новую seed-фразу (регистрация нового аккаунта в сети Minter)
-  rpc AutoTaskOut(AtasksOutReq) returns (ReturnAPITask) {}			// получить список задач на исполнение
-  rpc AutoTaskIn(ResQ) returns (NodeTodoQ) {}						// передать результат выполнения задач в платформу
-  rpc BlockOne(BlockInfoReq) returns (RetJSONBlock) {}				// получить данные 1-го блока
-  rpc TransactionOne(TrxInfoReq) returns (RetJSONTrx) {}			// получить данные 1-ой транзакции
-  rpc NodeOne(NodeInfoReq) returns (RetJSONNode) {}					// получить данные 1-го валидатора
-  rpc BlocksList(BlocksListReq) returns (BlocksListResp) {}			// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
-  rpc TransactionsList(TrxsListReq) returns (TrxsListResp) {}		// получить список транзакций [замена эндпоинта /transactions и /transactions/:pgn]
-  rpc NodesList(NilReq) returns (NodesListResp) {}					// получить список нод/валидаторов [замена эндпоинта /nodes и /nodes/:pgn]
-  rpc CoinsList(NilReq) returns (CoinsListResp) {}					// получить список монет [замена эндпоинта /coins]
-  rpc CoinOne(CoinReq) returns (CoinResp) {}						// получить данные 1-ой пары монет [замена эндпоинта /coin/:ticker и /coin/:ticker/:ticker2]
-  rpc TasksList(WalletListReq) returns (TasksListResp) {}			// получить список задач кошелька [замена эндпоинта /tasklist (частично уже реализовано, но для /tasklist/:number в /api/v1/autoTaskOut/:tokenauth/:pubkey)]
-  rpc WalletCoins(WalletReq) returns (WalletResp) {}				// получить баланс кошелька пользователя
-  rpc SyncStatus(NilReq) returns (SyncResp) {}						// получить статус синхронизации блоков в SQL из блокчейна
-  rpc CoinBase(NilReq) returns (CoinBaseResp) {}					// получить базовую монету
-  rpc WalletRewards(WalletReq) returns (WalletRewardsResp) {}		// получить награды адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
-  rpc WalletDelegate(WalletReq) returns (WalletDelegateResp) {}		// получить делегированные средства адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
-  rpc WalletTrxs(WalletListReq) returns (TrxsListResp) {}			// получить транзакции адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
-  rpc WalletActSendCoin(SendCoinReq) returns (ActionResp) {}		// выполнение транзакции авторизованного пользователя отправки монет SEND [замена POST для эндпоинта /sendcoin]
-  rpc WalletActDelegCoin(DelegCoinReq) returns (ActionResp) {}		// выполнение транзакции авторизованного пользователя делегирование монет DELEG [замена POST для эндпоинта /delegation]
-  rpc WalletActDeclrNode(DeclareNodeReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления мастернодой DECLARE-NODE [замена POST для эндпоинта /masternode]
-  rpc WalletActOnOffNode(StartStopNodeReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления мастернодой START/STOP-NODE [замена POST для эндпоинта /masternode]
-  rpc WalletActCreateCoin(CreateCoinReq) returns (ActionResp) {}	// выполнение транзакции авторизованного пользователя cоздания монеты COINER [замена POST для эндпоинта /coiner]
-  rpc WalletActCreateChec(CreateCheckReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления чеками CREATE-CHECK [замена POST для эндпоинта /checks]
-  rpc WalletActRedeemCheck(RedeemCheckReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления чеками ACT-CHECK [замена POST для эндпоинта /checks]
-  rpc WalletActNodeInfo(NewNodeInfoReq) returns (ActionResp) {}		// изменить данные ноды/валидатора авторизованным пользователем [замена POST для эндпоинта /node/:number] с ответом результата без hash
-  rpc WalletActCoinInfo(NewCoinInfoReq) returns (ActionResp) {}		// изменить данные монеты авторизованным пользователем [замена POST для эндпоинта /coin/:ticker и /coin/:ticker/:ticker2] с ответом результата без hash
+	rpc SessionCreate(SeedPhrase) returns (SessionID) {}				// TODO:(нет кода) создание сессии
+	rpc SessionCheck(SessionID) returns (WalletReq) {}					// TODO:(нет кода) проверка сессии
+	rpc SessionDelete(SessionID) returns (NilReq) {}					// TODO:(нет кода) удаление сессии
+	rpc NewMnemonic(NilReq) returns (SeedPhrase) {}						// получить новую seed-фразу (регистрация нового аккаунта в сети Minter)
+	rpc AutoTaskOut(AtasksOutReq) returns (ReturnAPITask) {}			// получить список задач на исполнение
+	rpc AutoTaskIn(ResQ) returns (NodeTodoQ) {}							// передать результат выполнения задач в платформу
+	rpc BlockOne(BlockInfoReq) returns (RetJSONBlock) {}				// получить данные 1-го блока
+	rpc TransactionOne(TrxInfoReq) returns (RetJSONTrx) {}				// получить данные 1-ой транзакции
+	rpc NodeOne(NodeInfoReq) returns (RetJSONNode) {}					// получить данные 1-го валидатора
+	rpc BlocksList(BlocksListReq) returns (BlocksListResp) {}			// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
+	rpc TransactionsList(TrxsListReq) returns (TrxsListResp) {}			// получить список транзакций [замена эндпоинта /transactions и /transactions/:pgn]
+	rpc NodesList(NilReq) returns (NodesListResp) {}					// получить список нод/валидаторов [замена эндпоинта /nodes и /nodes/:pgn]
+	rpc CoinsList(NilReq) returns (CoinsListResp) {}					// получить список монет [замена эндпоинта /coins]
+	rpc CoinOne(CoinReq) returns (CoinResp) {}							// получить данные 1-ой пары монет [замена эндпоинта /coin/:ticker и /coin/:ticker/:ticker2]
+	rpc TasksList(WalletListReq) returns (TasksListResp) {}				// получить список задач кошелька [замена эндпоинта /tasklist (частично уже реализовано, но для /tasklist/:number в /api/v1/autoTaskOut/:tokenauth/:pubkey)]
+	rpc WalletCoins(WalletReq) returns (WalletResp) {}					// получить баланс кошелька пользователя
+	rpc SyncStatus(NilReq) returns (SyncResp) {}						// получить статус синхронизации блоков в SQL из блокчейна
+	rpc CoinBase(NilReq) returns (CoinBaseResp) {}						// получить базовую монету
+	rpc WalletRewards(WalletReq) returns (WalletRewardsResp) {}			// получить награды адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+	rpc WalletDelegate(WalletReq) returns (WalletDelegateResp) {}		// получить делегированные средства адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+	rpc WalletTrxs(WalletListReq) returns (TrxsListResp) {}				// получить транзакции адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+	rpc WalletActSendCoin(SendCoinReq) returns (ActionResp) {}			// выполнение транзакции авторизованного пользователя отправки монет SEND [замена POST для эндпоинта /sendcoin]
+	rpc WalletActDelegCoin(DelegCoinReq) returns (ActionResp) {}		// выполнение транзакции авторизованного пользователя делегирование монет DELEG [замена POST для эндпоинта /delegation]
+	rpc WalletActDeclrNode(DeclareNodeReq) returns (ActionResp) {}		// выполнение транзакций авторизованного пользователя управления мастернодой DECLARE-NODE [замена POST для эндпоинта /masternode]
+	rpc WalletActOnOffNode(StartStopNodeReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления мастернодой START/STOP-NODE [замена POST для эндпоинта /masternode]
+	rpc WalletActCreateCoin(CreateCoinReq) returns (ActionResp) {}		// выполнение транзакции авторизованного пользователя cоздания монеты COINER [замена POST для эндпоинта /coiner]
+	rpc WalletActCreateChec(CreateCheckReq) returns (ActionResp) {}		// выполнение транзакций авторизованного пользователя управления чеками CREATE-CHECK [замена POST для эндпоинта /checks]
+	rpc WalletActRedeemCheck(RedeemCheckReq) returns (ActionResp) {}	// выполнение транзакций авторизованного пользователя управления чеками ACT-CHECK [замена POST для эндпоинта /checks]
+	rpc WalletActNodeInfo(NewNodeInfoReq) returns (ActionResp) {}		// изменить данные ноды/валидатора авторизованным пользователем [замена POST для эндпоинта /node/:number] с ответом результата без hash
+	rpc WalletActCoinInfo(NewCoinInfoReq) returns (ActionResp) {}		// изменить данные монеты авторизованным пользователем [замена POST для эндпоинта /coin/:ticker и /coin/:ticker/:ticker2] с ответом результата без hash
 }
