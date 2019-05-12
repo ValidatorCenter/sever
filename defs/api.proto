@@ -1,0 +1,632 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "defs";
+
+message NilReq {
+    bool Nil = 1;
+}
+
+//+---- Account
+message SessionID {
+    string ID = 1;
+}
+
+message SeedPhrase {
+    string Mnemonic = 1;
+}
+//----- Account
+
+//+---- ATasks-OUT
+message AtasksOutReq {
+    string TokenAuth = 1;
+    string PubKey = 2;
+}
+
+message ReturnAPITask {
+    float WalletCash = 1;
+    repeated TaskOne List = 2;
+}
+
+// Задачи для исполнения ноде
+message TaskOne {
+    bool Done = 1; // выполнено
+    google.protobuf.Timestamp Created = 2; // создана time
+    string Type = 3; // тип задачи: SEND-CASHBACK,...
+    uint32 Height = 4; // блок
+    string PubKey = 5; // мастернода
+    string Address = 6; // адрес кошелька X
+    float Amount = 7; // сумма
+}
+//----- ATasks-OUT
+
+//+---- ATasks-IN
+// Результат принятия ответа сервера от atasks, по задачам валидатора
+message ResQ {
+    int32 Status = 1; // если не 0, то код ошибки
+    string Message = 2;
+}
+
+// Результат выполнения задач валидатора
+message NodeTodoQ {
+    string TxHash = 1; // транзакция исполнения
+    repeated TodoOneQ QList = 2;
+}
+
+// Идентификатор одной задачи
+message TodoOneQ {
+    string Type = 1; // тип задачи: SEND-CASHBACK,...
+    uint32 Height = 2; // блок
+    string PubKey = 3; // мастернода
+    string Address = 4; // адрес кошелька X
+    google.protobuf.Timestamp Created = 5; // создана time
+    float Amount = 6; // сумма
+}
+//----- ATasks-IN
+
+//+---- Block-1
+message BlockInfoReq {
+    uint32 Number = 1;
+}
+
+// Структура возврата блока в виде JSON
+message RetJSONBlock {
+    bool Status = 1;
+    Block1 Block = 2;
+    string ErrMsg = 3;
+}
+
+// Структура одного блока для вывода на страницу
+message Block1 {
+    string Hash = 1;
+    string HashMin = 2;
+    int32 Height = 3;
+    google.protobuf.Timestamp Time = 4;
+    string Age = 5;
+    int32 NumTxs = 6;
+    int32 TotalTxs = 7;
+    repeated Block1Transaction Transactions = 8;
+    repeated Block1Events Events = 9;
+    repeated Block1Validator Validators = 10;
+    string Proposer = 11;
+    string ProposerName = 12;
+    string ProposerLogo = 13;
+    float BlockReward = 14;
+    int32 Size = 15;
+    int32 TransactionsAmnt = 16;
+    int32 EventsAmnt = 17;
+    int32 PrecommitsAmnt = 18;
+}
+
+// Структура одной транзакции в блоке для вывода на страницу
+message Block1Transaction {
+    string Hash = 1;
+    string HashMin = 2;
+    string From = 3;
+    string FromMin = 4;
+    int32 Nonce = 5;
+    int32 GasPrice = 6;
+    int32 Type = 7;
+    string TypeTxt = 8;
+    float Amount = 9;
+    string Payload = 10; // комментарий зашифрован Base64
+    int32 Gas = 11;
+    string GasCoin = 12;
+    int32 GasUsed = 13;
+}
+
+// Структура одного события в блоке для вывода на страницу
+message Block1Events {
+    string Type = 1;
+    string TypeTxt = 2;
+    string Role = 3; // DAO,Developers,Validator,Delegator
+    string Address = 4;
+    string AddressMin = 5;
+    float Amount = 6;
+    string Coin = 7;
+    string ValidatorPubKey = 8;
+    string ValidatorPubKeyMin = 9;
+}
+
+// Структура одного валидатор в блоке для вывода на страницу
+message Block1Validator {
+    string PubKey = 1;
+    bool Signed = 2;
+    string Name = 3;
+    string Logo = 4;
+}
+//----- Block-1
+
+//+---- Trx-1
+message TrxInfoReq {
+    string Number = 1; // hash транзакции
+}
+
+// Структура возврата транзакции в виде JSON
+message RetJSONTrx {
+    bool Status = 1;
+    Trans1 Trx = 2;
+    string ErrMsg = 3;
+}
+
+message Trans1 {
+    string Status = 1;
+    string Hash = 2;
+    string HashMin = 3;
+    int32 Height = 4;
+    int32 Index = 5;
+    string From = 6;
+    string FromMin = 7;
+    int32 Nonce = 8;
+    int32 GasPrice = 9;
+    string GasCoin = 10;
+    int32 GasUsed = 11;
+    float GasFee = 12;
+    int32 Type = 13;
+    string TypeTxt = 14;
+    string Payload = 15;
+    int32 Code = 16;
+    string Log = 17;
+    float Amount = 18;
+    string TxCoinToBuy = 19;
+    string TxCoinToSell = 20;
+    string TxFrom = 21;
+    float TxReturn = 22;
+    float TxSellAmount = 23;
+}
+//----- Trx-1
+
+//+---- Node-1
+message NodeInfoReq {
+    string Number = 1; // pubkey ноды
+}
+
+// Структура возврата блока в виде JSON
+message RetJSONNode {
+    bool Status = 1;
+    NodeExt2 Node = 2;
+    repeated ResReward Rewards = 3;
+    string ErrMsg = 4;
+}
+
+message NodeExt2 {
+    string ValidatorName = 1;
+    string ValidatorURL = 2;
+    string ValidatorLogoImg = 3;
+    string ValidatorDesc = 4;
+    float Uptime = 5;
+    google.protobuf.Timestamp Created = 6; // дата создания
+    string RewardAddress = 7; // Адрес кошелька "Mx..." вознаграждения
+    string OwnerAddress = 8; // Адрес кошелька "Mx..." основной
+    float TotalStake = 9; // Полный стэк
+    string PubKey = 10; // паблик ноды "Mp..."
+    string PubKeyMin = 11; // короткий паблик ноды "Mp..."
+    string ValidatorAddress = 12; // Адрес ноды, в основном в транзакциях
+    int32 Commission = 13; // комиссия
+    int32 CreatedAtBlock = 14; // блок создания
+    int32 StatusInt = 15; // числовое значение статуса: 1 - Offline, 2 - Online, 77 - Validator
+    google.protobuf.Timestamp TimeUpdate = 16; // UPDATE дата последнего обновления
+    repeated StakesInfo Stakes = 17; // Только у: Candidate(по PubKey)
+    repeated BlocksStory Blocks = 18; // важные исторические блоки
+    uint64 AmntBlocks = 19; // количество "всего"(с пропущенными) блоков в которых является подписантом
+    int32 AmntSlashed = 20; // количество штрафов, полный список по запросу из транзакций
+    int32 AmnNoBlocks = 21; // количество пропущенных блоков
+    int32 AmntSlots = 22; // количество занятых слотов это количество уникальных объектов в Stakes
+    int32 CommissionNow = 23;
+}
+
+// стэк кандидата/валидатора в каких монетах
+message StakesInfo {
+    string Owner = 1;
+    string Coin = 2;
+    float Value = 3;
+    float BipValue = 4;
+}
+
+message BlocksStory {
+    uint32 ID = 1;
+    string Type = 2; // создание, пропуск, штраф, старт, стоп
+}
+
+// Награда
+message ResReward {
+    string Role = 1;
+    string Address = 2;
+    string PubKey = 3;
+    float Amnt = 4;
+}
+//----- Node-1
+
+//+---- Blocks-List
+message BlocksListReq {
+    uint32 Page = 1;
+}
+
+message BlocksListResp {
+    repeated Block1 AllBlocks = 1;
+    // Доп.инфа по кол.блоков
+    uint32 TotalBlock = 2;
+    uint32 MinBlock = 3;
+    uint32 MaxBlock = 4;
+    // Кнопки навигации по страницам:
+    uint32 BtnLL = 5;
+    uint32 BtnL = 6;
+    uint32 BtnR = 7;
+    uint32 BtnRR = 8;
+}
+//----- Blocks-List
+
+//+---- Trxs-List
+message TrxsListReq {
+    uint32 Page = 1;
+}
+
+message TrxsListResp {
+    repeated Trans1 AllTrns = 1; // TODO: Вся инфа о транзе, что не совсем правильно
+    // Доп.инфа по кол.блоков
+    uint32 TotalBlock = 2;
+    // Кнопки навигации по страницам:
+    uint32 BtnNow = 3;
+    uint32 BtnL = 4;
+    uint32 BtnR = 5;
+    uint32 BtnRR = 6;
+}
+//----- Trxs-List
+
+//+---- Nodes-List
+message NodesListResp {
+    repeated NodeExt2 AllCandidates = 1;
+}
+//----- Nodes-List
+
+//+---- Coins-List
+message CoinsListResp {
+    repeated CoinView AllCoins = 1;
+}
+
+message CoinView {
+    int32 ID = 1;
+    string Name = 2;
+    string Ticker = 3;
+    string CoinLogoImg = 4;
+    string PriceBuy = 5;
+    string PriceBuyUSD = 6;
+    string Volume24 = 7;
+    string Change24 = 8;
+    float Change24f32 = 9;
+}
+//----- Coins-List
+
+//+---- Coin-1p
+message CoinReq {
+    string Ticker1 = 1;
+    string Ticker2 = 2;
+}
+
+message CoinResp {
+    google.protobuf.Timestamp UpdateData = 1;
+    google.protobuf.Timestamp Time = 2;
+    string TitleCoin = 3;
+    repeated OneCoinTrans Transactions = 4;
+    string Ticker1 = 5;
+    string Ticker2 = 6;
+    repeated string Other2Coins = 7;
+    string PriceNowBuy = 8;
+    string PriceNowSell = 9;
+    float Change24 = 10;
+    float Volume24 = 11;
+    bool MyCoin = 12;
+    string Creator = 13;
+    string CreatorTXT = 14;
+    int32 CRR_prc = 15;
+    string InitialAmount = 16;
+    string InitialReserve = 17;
+    float Volume = 18;
+    string ReserveBalance = 19;
+    CoinMarketCapData CoinInf = 20;
+}
+
+// Структура Японской-Свечки для графиков
+message OneCoinTrans {
+    string Date = 1;
+    float Open = 2;
+    float High = 3;
+    float Low = 4;
+    float Close = 5;
+    float Volume = 6;
+}
+
+// Информация о монете
+message CoinMarketCapData {
+    string Name = 1; // название монеты
+    string CoinSymbol = 2; // символ монеты
+    string CoinURL = 3;
+    string CoinLogoImg = 4;
+    string CoinDesc = 5;
+    google.protobuf.Timestamp Time = 6; // дата создания
+    google.protobuf.Timestamp TimeUpdate = 7; // UPDATE дата последнего обновления
+    float InitialAmount = 8;
+    float InitialReserve = 9;
+    int32 ConstantReserveRatio = 10; // uint, should be from 10 to 100 (в %).
+    float VolumeNow = 11; // UPDATE
+    float ReserveBalanceNow = 12; // UPDATE
+    string Creator = 13;
+    int32 AmntTrans24x7 = 14; // UPDATE количество транзакций за последние 7дней (TODO: относительно MNT)
+    repeated CoinActionpData Transactions = 15; // движения
+}
+
+// Движение монеты
+message CoinActionpData {
+    string Hash = 1; // Хэш транзакции
+    google.protobuf.Timestamp Time = 2; // дата движения
+    int32 Type = 3; // type: продажа или покупка
+    string CoinToBuy = 4; // Монета покупки
+    string CoinToSell = 5; // Монета продажи
+    float ValueToBuy = 6; // Количество покупки
+    float ValueToSell = 7; // Количество продано
+    float Price = 8; // Цена
+    float Volume = 9; // Объем
+}
+//----- Coin-1p
+
+//+---- Tasks-List
+message WalletListReq {
+    string Wallet = 1; // Адрес кошелька
+    uint32 Page = 2; // Страница для показа
+}
+
+message TasksListResp {
+    repeated TaskOne List = 1;
+    // Кнопки навигации по страницам:
+    uint32 BtnNow = 2;
+    uint32 BtnL = 3;
+    uint32 BtnR = 4;
+    uint32 BtnRR = 5;
+}
+//----- Tasks-List
+
+//+---- Wallet-1
+message WalletReq {
+    string Wallet = 1; // Адрес кошелька
+}
+
+message WalletResp {
+    repeated WalletCoin1 WalletCoins = 1;
+    uint32 TotalAmntInBaseCoin = 2;
+}
+
+message WalletCoin1 {
+    string Ticker = 1;
+    float Amnt = 2;
+}
+
+message WalletRewardsResp {
+    repeated ResReward AllReward = 1;
+    float TotalReward = 2;
+}
+
+message WalletDelegateResp {
+    repeated Delegate AllDeleg = 1;
+    float TotalDelegate = 2;
+}
+
+message Delegate {
+    string Validator = 1;
+    string ValidatorMin = 2;
+    string Coin = 3;
+    float Value = 4;
+    float ValueBip = 5;
+}
+//----- Wallet-1
+
+//+---- Sync
+message SyncResp {
+    uint32 LastSync = 1;
+    uint32 Current = 2;
+    string ChainNet = 3;
+}
+//----- Sync
+
+//+---- BIP/MNT
+message CoinBaseResp {
+    string Ticker = 1;
+}
+//----- BIP/MNT
+
+//+---- Wallet-Action
+// Результат выполнения операции
+message ActionResp {
+    bool Status = 1;
+    string TrxHash = 2;
+    string ErrMsg = 3;
+}
+
+message SendCoinReq {
+    string Address = 1;
+    string Coin = 2;
+    string FeeCoin = 3;
+    float Value = 4;
+}
+
+message DelegCoinReq {
+    string DelegCoin = 1;
+    string Validator = 2;
+    float ValueDeleg = 3;
+    string FeeCoin = 4;
+}
+
+message DeclareNodeReq {
+    string Validator = 1;
+    uint32 Comm = 2;
+    string TaxCoin = 3;
+    int64 ValueStart = 4;
+    string FeeCoin = 5;
+}
+
+message StartStopNodeReq {
+    string Validator = 1;
+    bool OnOff = 2;
+    string FeeCoin = 3;
+}
+
+message CreateCoinReq {
+    string NameCoin = 1;
+    string TickerCoin = 2;
+    int64 InitAmnt = 3;
+    int64 InitResrv = 4;
+    uint32 CRR = 5;
+    string FeeCoin = 6;
+}
+
+message CreateCheckReq {
+    string Coin = 1;
+    float Value = 2;
+    string Pswrd = 3;
+    uint64 Nonce = 4;
+}
+
+message RedeemCheckReq {
+    string Check = 1;
+    string Pswrd = 2;
+}
+
+message NewNodeInfoReq {
+    string Title = 1;
+    string WWW = 2;
+    string Description = 3;
+    string Icon = 4;
+}
+
+message NewCoinInfoReq {
+    string WWW = 1;
+    string Description = 2;
+    string Icon = 3;
+}
+//----- Wallet-Action
+
+service PlatformAPI {
+    // TODO:(нет кода) создание сессии
+    rpc SessionCreate (SeedPhrase) returns (SessionID) {
+    }
+
+    // TODO:(нет кода) проверка сессии
+    rpc SessionCheck (SessionID) returns (WalletReq) {
+    }
+
+    // TODO:(нет кода) удаление сессии
+    rpc SessionDelete (SessionID) returns (NilReq) {
+    }
+
+    // получить новую seed-фразу (регистрация нового аккаунта в сети Minter)
+    rpc NewMnemonic (NilReq) returns (SeedPhrase) {
+    }
+
+    // получить список задач на исполнение
+    rpc AutoTaskOut (AtasksOutReq) returns (ReturnAPITask) {
+    }
+
+    // передать результат выполнения задач в платформу
+    rpc AutoTaskIn (ResQ) returns (NodeTodoQ) {
+    }
+
+    // получить данные 1-го блока
+    rpc BlockOne (BlockInfoReq) returns (RetJSONBlock) {
+    }
+
+    // получить данные 1-ой транзакции
+    rpc TransactionOne (TrxInfoReq) returns (RetJSONTrx) {
+    }
+
+    // получить данные 1-го валидатора
+    rpc NodeOne (NodeInfoReq) returns (RetJSONNode) {
+    }
+
+    // получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
+    rpc BlocksList (BlocksListReq) returns (BlocksListResp) {
+        option (google.api.http) = {
+			get: "/v1/gateway/blocks"
+		};
+    }
+
+    // получить список транзакций [замена эндпоинта /transactions и /transactions/:pgn]
+    rpc TransactionsList (TrxsListReq) returns (TrxsListResp) {
+    }
+
+    // получить список нод/валидаторов [замена эндпоинта /nodes и /nodes/:pgn]
+    rpc NodesList (NilReq) returns (NodesListResp) {
+    }
+
+    // получить список монет [замена эндпоинта /coins]
+    rpc CoinsList (NilReq) returns (CoinsListResp) {
+    }
+
+    // получить данные 1-ой пары монет [замена эндпоинта /coin/:ticker и /coin/:ticker/:ticker2]
+    rpc CoinOne (CoinReq) returns (CoinResp) {
+    }
+
+    // получить список задач кошелька [замена эндпоинта /tasklist (частично уже реализовано, но для /tasklist/:number в /api/v1/autoTaskOut/:tokenauth/:pubkey)]
+    rpc TasksList (WalletListReq) returns (TasksListResp) {
+    }
+
+    // получить баланс кошелька пользователя
+    rpc WalletCoins (WalletReq) returns (WalletResp) {
+    }
+
+    // получить статус синхронизации блоков в SQL из блокчейна
+    rpc SyncStatus (NilReq) returns (SyncResp) {
+    }
+
+    // получить базовую монету
+    rpc CoinBase (NilReq) returns (CoinBaseResp) {
+    }
+
+    // получить награды адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+    rpc WalletRewards (WalletReq) returns (WalletRewardsResp) {
+    }
+
+    // получить делегированные средства адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+    rpc WalletDelegate (WalletReq) returns (WalletDelegateResp) {
+    }
+
+    // получить транзакции адреса-кошелька [замена эндпоинта /address/:number и /address/:number/:pgn]
+    rpc WalletTrxs (WalletListReq) returns (TrxsListResp) {
+    }
+
+    // выполнение транзакции авторизованного пользователя отправки монет SEND [замена POST для эндпоинта /sendcoin]
+    rpc WalletActSendCoin (SendCoinReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакции авторизованного пользователя делегирование монет DELEG [замена POST для эндпоинта /delegation]
+    rpc WalletActDelegCoin (DelegCoinReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакций авторизованного пользователя управления мастернодой DECLARE-NODE [замена POST для эндпоинта /masternode]
+    rpc WalletActDeclrNode (DeclareNodeReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакций авторизованного пользователя управления мастернодой START/STOP-NODE [замена POST для эндпоинта /masternode]
+    rpc WalletActOnOffNode (StartStopNodeReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакции авторизованного пользователя cоздания монеты COINER [замена POST для эндпоинта /coiner]
+    rpc WalletActCreateCoin (CreateCoinReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакций авторизованного пользователя управления чеками CREATE-CHECK [замена POST для эндпоинта /checks]
+    rpc WalletActCreateChec (CreateCheckReq) returns (ActionResp) {
+    }
+
+    // выполнение транзакций авторизованного пользователя управления чеками ACT-CHECK [замена POST для эндпоинта /checks]
+    rpc WalletActRedeemCheck (RedeemCheckReq) returns (ActionResp) {
+    }
+
+    // изменить данные ноды/валидатора авторизованным пользователем [замена POST для эндпоинта /node/:number] с ответом результата без hash
+    rpc WalletActNodeInfo (NewNodeInfoReq) returns (ActionResp) {
+    }
+
+    // изменить данные монеты авторизованным пользователем [замена POST для эндпоинта /coin/:ticker и /coin/:ticker/:ticker2] с ответом результата без hashs
+    rpc WalletActCoinInfo (NewCoinInfoReq) returns (ActionResp) {
+    }
+}

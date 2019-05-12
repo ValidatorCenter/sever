@@ -1,0 +1,13 @@
+[Unit]
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/vcapid -grpc_listen ':9090' -http_listen ':12345' -logtostderr
+KillSignal=SIGKILL
+KillMode=process
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target
