@@ -9,6 +9,6 @@ check-vars:
 	test -n "$(grpc_gateway_module_path)"
 
 bin/vcapid: generate
-	go build -o ./bin/vcapid ./cmd/vcapid/main.go
+	go build -v -o ./bin/vcapid ./cmd/vcapid/main.go
 
 .PHONY: all generate check-vars

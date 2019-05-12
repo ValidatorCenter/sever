@@ -3,7 +3,7 @@
 // DO NOT EDIT!
 
 /*
-Package api is a generated protocol buffer package.
+Package defs is a generated protocol buffer package.
 
 It is generated from these files:
 	api.proto
@@ -66,7 +66,7 @@ It has these top-level messages:
 	NewNodeInfoReq
 	NewCoinInfoReq
 */
-package api
+package defs
 
 import proto "github.com/golang/protobuf/proto"
 

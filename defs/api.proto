@@ -1,9 +1,9 @@
-// protoc --go_out=plugins=grpc:. *.proto
-
 syntax = "proto3";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
+
+option go_package = "defs";
 
 message NilReq {
 	bool Nil = 1;
