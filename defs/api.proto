@@ -2,8 +2,8 @@
 
 syntax = "proto3";
 
+import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
-
 
 message NilReq {
 	bool Nil = 1;
@@ -516,7 +516,15 @@ service PlatformAPI {
 	rpc BlockOne(BlockInfoReq) returns (RetJSONBlock) {}				// получить данные 1-го блока
 	rpc TransactionOne(TrxInfoReq) returns (RetJSONTrx) {}				// получить данные 1-ой транзакции
 	rpc NodeOne(NodeInfoReq) returns (RetJSONNode) {}					// получить данные 1-го валидатора
-	rpc BlocksList(BlocksListReq) returns (BlocksListResp) {}			// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
+
+	// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
+	rpc BlocksList(BlocksListReq) returns (BlocksListResp) {
+		option (google.api.http) = {
+			post: "/v1/gateway/blocks"
+			body: "*"
+		};
+	}
+
 	rpc TransactionsList(TrxsListReq) returns (TrxsListResp) {}			// получить список транзакций [замена эндпоинта /transactions и /transactions/:pgn]
 	rpc NodesList(NilReq) returns (NodesListResp) {}					// получить список нод/валидаторов [замена эндпоинта /nodes и /nodes/:pgn]
 	rpc CoinsList(NilReq) returns (CoinsListResp) {}					// получить список монет [замена эндпоинта /coins]

@@ -69,7 +69,9 @@ It has these top-level messages:
 package api
 
 import proto "github.com/golang/protobuf/proto"
-import google_protobuf "google/protobuf/timestamp.pb"
+
+// discarding unused import google_api1 "google/api/annotations.pb"
+import google_protobuf1 "google/protobuf/timestamp.pb"
 
 import (
 	context "golang.org/x/net/context"
@@ -136,20 +138,20 @@ func (m *ReturnAPITask) GetList() []*TaskOne {
 
 // Задачи для исполнения ноде
 type TaskOne struct {
-	Done    bool                       `protobuf:"varint,1,opt" json:"Done,omitempty"`
-	Created *google_protobuf.Timestamp `protobuf:"bytes,2,opt" json:"Created,omitempty"`
-	Type    string                     `protobuf:"bytes,3,opt" json:"Type,omitempty"`
-	Height  uint32                     `protobuf:"varint,4,opt" json:"Height,omitempty"`
-	PubKey  string                     `protobuf:"bytes,5,opt" json:"PubKey,omitempty"`
-	Address string                     `protobuf:"bytes,6,opt" json:"Address,omitempty"`
-	Amount  float32                    `protobuf:"fixed32,7,opt" json:"Amount,omitempty"`
+	Done    bool                        `protobuf:"varint,1,opt" json:"Done,omitempty"`
+	Created *google_protobuf1.Timestamp `protobuf:"bytes,2,opt" json:"Created,omitempty"`
+	Type    string                      `protobuf:"bytes,3,opt" json:"Type,omitempty"`
+	Height  uint32                      `protobuf:"varint,4,opt" json:"Height,omitempty"`
+	PubKey  string                      `protobuf:"bytes,5,opt" json:"PubKey,omitempty"`
+	Address string                      `protobuf:"bytes,6,opt" json:"Address,omitempty"`
+	Amount  float32                     `protobuf:"fixed32,7,opt" json:"Amount,omitempty"`
 }
 
 func (m *TaskOne) Reset()         { *m = TaskOne{} }
 func (m *TaskOne) String() string { return proto.CompactTextString(m) }
 func (*TaskOne) ProtoMessage()    {}
 
-func (m *TaskOne) GetCreated() *google_protobuf.Timestamp {
+func (m *TaskOne) GetCreated() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Created
 	}
@@ -186,19 +188,19 @@ func (m *NodeTodoQ) GetQList() []*TodoOneQ {
 
 // Идентификатор одной задачи
 type TodoOneQ struct {
-	Type    string                     `protobuf:"bytes,1,opt" json:"Type,omitempty"`
-	Height  uint32                     `protobuf:"varint,2,opt" json:"Height,omitempty"`
-	PubKey  string                     `protobuf:"bytes,3,opt" json:"PubKey,omitempty"`
-	Address string                     `protobuf:"bytes,4,opt" json:"Address,omitempty"`
-	Created *google_protobuf.Timestamp `protobuf:"bytes,5,opt" json:"Created,omitempty"`
-	Amount  float32                    `protobuf:"fixed32,6,opt" json:"Amount,omitempty"`
+	Type    string                      `protobuf:"bytes,1,opt" json:"Type,omitempty"`
+	Height  uint32                      `protobuf:"varint,2,opt" json:"Height,omitempty"`
+	PubKey  string                      `protobuf:"bytes,3,opt" json:"PubKey,omitempty"`
+	Address string                      `protobuf:"bytes,4,opt" json:"Address,omitempty"`
+	Created *google_protobuf1.Timestamp `protobuf:"bytes,5,opt" json:"Created,omitempty"`
+	Amount  float32                     `protobuf:"fixed32,6,opt" json:"Amount,omitempty"`
 }
 
 func (m *TodoOneQ) Reset()         { *m = TodoOneQ{} }
 func (m *TodoOneQ) String() string { return proto.CompactTextString(m) }
 func (*TodoOneQ) ProtoMessage()    {}
 
-func (m *TodoOneQ) GetCreated() *google_protobuf.Timestamp {
+func (m *TodoOneQ) GetCreated() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Created
 	}
@@ -234,31 +236,31 @@ func (m *RetJSONBlock) GetBlock() *Block1 {
 
 // Структура одного блока для вывода на страницу
 type Block1 struct {
-	Hash             string                     `protobuf:"bytes,1,opt" json:"Hash,omitempty"`
-	HashMin          string                     `protobuf:"bytes,2,opt" json:"HashMin,omitempty"`
-	Height           int32                      `protobuf:"varint,3,opt" json:"Height,omitempty"`
-	Time             *google_protobuf.Timestamp `protobuf:"bytes,4,opt" json:"Time,omitempty"`
-	Age              string                     `protobuf:"bytes,5,opt" json:"Age,omitempty"`
-	NumTxs           int32                      `protobuf:"varint,6,opt" json:"NumTxs,omitempty"`
-	TotalTxs         int32                      `protobuf:"varint,7,opt" json:"TotalTxs,omitempty"`
-	Transactions     []*Block1Transaction       `protobuf:"bytes,8,rep" json:"Transactions,omitempty"`
-	Events           []*Block1Events            `protobuf:"bytes,9,rep" json:"Events,omitempty"`
-	Validators       []*Block1Validator         `protobuf:"bytes,10,rep" json:"Validators,omitempty"`
-	Proposer         string                     `protobuf:"bytes,11,opt" json:"Proposer,omitempty"`
-	ProposerName     string                     `protobuf:"bytes,12,opt" json:"ProposerName,omitempty"`
-	ProposerLogo     string                     `protobuf:"bytes,13,opt" json:"ProposerLogo,omitempty"`
-	BlockReward      float32                    `protobuf:"fixed32,14,opt" json:"BlockReward,omitempty"`
-	Size             int32                      `protobuf:"varint,15,opt" json:"Size,omitempty"`
-	TransactionsAmnt int32                      `protobuf:"varint,16,opt" json:"TransactionsAmnt,omitempty"`
-	EventsAmnt       int32                      `protobuf:"varint,17,opt" json:"EventsAmnt,omitempty"`
-	PrecommitsAmnt   int32                      `protobuf:"varint,18,opt" json:"PrecommitsAmnt,omitempty"`
+	Hash             string                      `protobuf:"bytes,1,opt" json:"Hash,omitempty"`
+	HashMin          string                      `protobuf:"bytes,2,opt" json:"HashMin,omitempty"`
+	Height           int32                       `protobuf:"varint,3,opt" json:"Height,omitempty"`
+	Time             *google_protobuf1.Timestamp `protobuf:"bytes,4,opt" json:"Time,omitempty"`
+	Age              string                      `protobuf:"bytes,5,opt" json:"Age,omitempty"`
+	NumTxs           int32                       `protobuf:"varint,6,opt" json:"NumTxs,omitempty"`
+	TotalTxs         int32                       `protobuf:"varint,7,opt" json:"TotalTxs,omitempty"`
+	Transactions     []*Block1Transaction        `protobuf:"bytes,8,rep" json:"Transactions,omitempty"`
+	Events           []*Block1Events             `protobuf:"bytes,9,rep" json:"Events,omitempty"`
+	Validators       []*Block1Validator          `protobuf:"bytes,10,rep" json:"Validators,omitempty"`
+	Proposer         string                      `protobuf:"bytes,11,opt" json:"Proposer,omitempty"`
+	ProposerName     string                      `protobuf:"bytes,12,opt" json:"ProposerName,omitempty"`
+	ProposerLogo     string                      `protobuf:"bytes,13,opt" json:"ProposerLogo,omitempty"`
+	BlockReward      float32                     `protobuf:"fixed32,14,opt" json:"BlockReward,omitempty"`
+	Size             int32                       `protobuf:"varint,15,opt" json:"Size,omitempty"`
+	TransactionsAmnt int32                       `protobuf:"varint,16,opt" json:"TransactionsAmnt,omitempty"`
+	EventsAmnt       int32                       `protobuf:"varint,17,opt" json:"EventsAmnt,omitempty"`
+	PrecommitsAmnt   int32                       `protobuf:"varint,18,opt" json:"PrecommitsAmnt,omitempty"`
 }
 
 func (m *Block1) Reset()         { *m = Block1{} }
 func (m *Block1) String() string { return proto.CompactTextString(m) }
 func (*Block1) ProtoMessage()    {}
 
-func (m *Block1) GetTime() *google_protobuf.Timestamp {
+func (m *Block1) GetTime() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Time
 	}
@@ -429,43 +431,43 @@ func (m *RetJSONNode) GetRewards() []*ResReward {
 }
 
 type NodeExt2 struct {
-	ValidatorName    string                     `protobuf:"bytes,1,opt" json:"ValidatorName,omitempty"`
-	ValidatorURL     string                     `protobuf:"bytes,2,opt" json:"ValidatorURL,omitempty"`
-	ValidatorLogoImg string                     `protobuf:"bytes,3,opt" json:"ValidatorLogoImg,omitempty"`
-	ValidatorDesc    string                     `protobuf:"bytes,4,opt" json:"ValidatorDesc,omitempty"`
-	Uptime           float32                    `protobuf:"fixed32,5,opt" json:"Uptime,omitempty"`
-	Created          *google_protobuf.Timestamp `protobuf:"bytes,6,opt" json:"Created,omitempty"`
-	RewardAddress    string                     `protobuf:"bytes,7,opt" json:"RewardAddress,omitempty"`
-	OwnerAddress     string                     `protobuf:"bytes,8,opt" json:"OwnerAddress,omitempty"`
-	TotalStake       float32                    `protobuf:"fixed32,9,opt" json:"TotalStake,omitempty"`
-	PubKey           string                     `protobuf:"bytes,10,opt" json:"PubKey,omitempty"`
-	PubKeyMin        string                     `protobuf:"bytes,11,opt" json:"PubKeyMin,omitempty"`
-	ValidatorAddress string                     `protobuf:"bytes,12,opt" json:"ValidatorAddress,omitempty"`
-	Commission       int32                      `protobuf:"varint,13,opt" json:"Commission,omitempty"`
-	CreatedAtBlock   int32                      `protobuf:"varint,14,opt" json:"CreatedAtBlock,omitempty"`
-	StatusInt        int32                      `protobuf:"varint,15,opt" json:"StatusInt,omitempty"`
-	TimeUpdate       *google_protobuf.Timestamp `protobuf:"bytes,16,opt" json:"TimeUpdate,omitempty"`
-	Stakes           []*StakesInfo              `protobuf:"bytes,17,rep" json:"Stakes,omitempty"`
-	Blocks           []*BlocksStory             `protobuf:"bytes,18,rep" json:"Blocks,omitempty"`
-	AmntBlocks       uint64                     `protobuf:"varint,19,opt" json:"AmntBlocks,omitempty"`
-	AmntSlashed      int32                      `protobuf:"varint,20,opt" json:"AmntSlashed,omitempty"`
-	AmnNoBlocks      int32                      `protobuf:"varint,21,opt" json:"AmnNoBlocks,omitempty"`
-	AmntSlots        int32                      `protobuf:"varint,22,opt" json:"AmntSlots,omitempty"`
-	CommissionNow    int32                      `protobuf:"varint,23,opt" json:"CommissionNow,omitempty"`
+	ValidatorName    string                      `protobuf:"bytes,1,opt" json:"ValidatorName,omitempty"`
+	ValidatorURL     string                      `protobuf:"bytes,2,opt" json:"ValidatorURL,omitempty"`
+	ValidatorLogoImg string                      `protobuf:"bytes,3,opt" json:"ValidatorLogoImg,omitempty"`
+	ValidatorDesc    string                      `protobuf:"bytes,4,opt" json:"ValidatorDesc,omitempty"`
+	Uptime           float32                     `protobuf:"fixed32,5,opt" json:"Uptime,omitempty"`
+	Created          *google_protobuf1.Timestamp `protobuf:"bytes,6,opt" json:"Created,omitempty"`
+	RewardAddress    string                      `protobuf:"bytes,7,opt" json:"RewardAddress,omitempty"`
+	OwnerAddress     string                      `protobuf:"bytes,8,opt" json:"OwnerAddress,omitempty"`
+	TotalStake       float32                     `protobuf:"fixed32,9,opt" json:"TotalStake,omitempty"`
+	PubKey           string                      `protobuf:"bytes,10,opt" json:"PubKey,omitempty"`
+	PubKeyMin        string                      `protobuf:"bytes,11,opt" json:"PubKeyMin,omitempty"`
+	ValidatorAddress string                      `protobuf:"bytes,12,opt" json:"ValidatorAddress,omitempty"`
+	Commission       int32                       `protobuf:"varint,13,opt" json:"Commission,omitempty"`
+	CreatedAtBlock   int32                       `protobuf:"varint,14,opt" json:"CreatedAtBlock,omitempty"`
+	StatusInt        int32                       `protobuf:"varint,15,opt" json:"StatusInt,omitempty"`
+	TimeUpdate       *google_protobuf1.Timestamp `protobuf:"bytes,16,opt" json:"TimeUpdate,omitempty"`
+	Stakes           []*StakesInfo               `protobuf:"bytes,17,rep" json:"Stakes,omitempty"`
+	Blocks           []*BlocksStory              `protobuf:"bytes,18,rep" json:"Blocks,omitempty"`
+	AmntBlocks       uint64                      `protobuf:"varint,19,opt" json:"AmntBlocks,omitempty"`
+	AmntSlashed      int32                       `protobuf:"varint,20,opt" json:"AmntSlashed,omitempty"`
+	AmnNoBlocks      int32                       `protobuf:"varint,21,opt" json:"AmnNoBlocks,omitempty"`
+	AmntSlots        int32                       `protobuf:"varint,22,opt" json:"AmntSlots,omitempty"`
+	CommissionNow    int32                       `protobuf:"varint,23,opt" json:"CommissionNow,omitempty"`
 }
 
 func (m *NodeExt2) Reset()         { *m = NodeExt2{} }
 func (m *NodeExt2) String() string { return proto.CompactTextString(m) }
 func (*NodeExt2) ProtoMessage()    {}
 
-func (m *NodeExt2) GetCreated() *google_protobuf.Timestamp {
+func (m *NodeExt2) GetCreated() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Created
 	}
 	return nil
 }
 
-func (m *NodeExt2) GetTimeUpdate() *google_protobuf.Timestamp {
+func (m *NodeExt2) GetTimeUpdate() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.TimeUpdate
 	}
@@ -642,40 +644,40 @@ func (m *CoinReq) String() string { return proto.CompactTextString(m) }
 func (*CoinReq) ProtoMessage()    {}
 
 type CoinResp struct {
-	UpdateData     *google_protobuf.Timestamp `protobuf:"bytes,1,opt" json:"UpdateData,omitempty"`
-	Time           *google_protobuf.Timestamp `protobuf:"bytes,2,opt" json:"Time,omitempty"`
-	TitleCoin      string                     `protobuf:"bytes,3,opt" json:"TitleCoin,omitempty"`
-	Transactions   []*OneCoinTrans            `protobuf:"bytes,4,rep" json:"Transactions,omitempty"`
-	Ticker1        string                     `protobuf:"bytes,5,opt" json:"Ticker1,omitempty"`
-	Ticker2        string                     `protobuf:"bytes,6,opt" json:"Ticker2,omitempty"`
-	Other2Coins    []string                   `protobuf:"bytes,7,rep" json:"Other2Coins,omitempty"`
-	PriceNowBuy    string                     `protobuf:"bytes,8,opt" json:"PriceNowBuy,omitempty"`
-	PriceNowSell   string                     `protobuf:"bytes,9,opt" json:"PriceNowSell,omitempty"`
-	Change24       float32                    `protobuf:"fixed32,10,opt" json:"Change24,omitempty"`
-	Volume24       float32                    `protobuf:"fixed32,11,opt" json:"Volume24,omitempty"`
-	MyCoin         bool                       `protobuf:"varint,12,opt" json:"MyCoin,omitempty"`
-	Creator        string                     `protobuf:"bytes,13,opt" json:"Creator,omitempty"`
-	CreatorTXT     string                     `protobuf:"bytes,14,opt" json:"CreatorTXT,omitempty"`
-	CRRPrc         int32                      `protobuf:"varint,15,opt,name=CRR_prc" json:"CRR_prc,omitempty"`
-	InitialAmount  string                     `protobuf:"bytes,16,opt" json:"InitialAmount,omitempty"`
-	InitialReserve string                     `protobuf:"bytes,17,opt" json:"InitialReserve,omitempty"`
-	Volume         float32                    `protobuf:"fixed32,18,opt" json:"Volume,omitempty"`
-	ReserveBalance string                     `protobuf:"bytes,19,opt" json:"ReserveBalance,omitempty"`
-	CoinInf        *CoinMarketCapData         `protobuf:"bytes,20,opt" json:"CoinInf,omitempty"`
+	UpdateData     *google_protobuf1.Timestamp `protobuf:"bytes,1,opt" json:"UpdateData,omitempty"`
+	Time           *google_protobuf1.Timestamp `protobuf:"bytes,2,opt" json:"Time,omitempty"`
+	TitleCoin      string                      `protobuf:"bytes,3,opt" json:"TitleCoin,omitempty"`
+	Transactions   []*OneCoinTrans             `protobuf:"bytes,4,rep" json:"Transactions,omitempty"`
+	Ticker1        string                      `protobuf:"bytes,5,opt" json:"Ticker1,omitempty"`
+	Ticker2        string                      `protobuf:"bytes,6,opt" json:"Ticker2,omitempty"`
+	Other2Coins    []string                    `protobuf:"bytes,7,rep" json:"Other2Coins,omitempty"`
+	PriceNowBuy    string                      `protobuf:"bytes,8,opt" json:"PriceNowBuy,omitempty"`
+	PriceNowSell   string                      `protobuf:"bytes,9,opt" json:"PriceNowSell,omitempty"`
+	Change24       float32                     `protobuf:"fixed32,10,opt" json:"Change24,omitempty"`
+	Volume24       float32                     `protobuf:"fixed32,11,opt" json:"Volume24,omitempty"`
+	MyCoin         bool                        `protobuf:"varint,12,opt" json:"MyCoin,omitempty"`
+	Creator        string                      `protobuf:"bytes,13,opt" json:"Creator,omitempty"`
+	CreatorTXT     string                      `protobuf:"bytes,14,opt" json:"CreatorTXT,omitempty"`
+	CRRPrc         int32                       `protobuf:"varint,15,opt,name=CRR_prc" json:"CRR_prc,omitempty"`
+	InitialAmount  string                      `protobuf:"bytes,16,opt" json:"InitialAmount,omitempty"`
+	InitialReserve string                      `protobuf:"bytes,17,opt" json:"InitialReserve,omitempty"`
+	Volume         float32                     `protobuf:"fixed32,18,opt" json:"Volume,omitempty"`
+	ReserveBalance string                      `protobuf:"bytes,19,opt" json:"ReserveBalance,omitempty"`
+	CoinInf        *CoinMarketCapData          `protobuf:"bytes,20,opt" json:"CoinInf,omitempty"`
 }
 
 func (m *CoinResp) Reset()         { *m = CoinResp{} }
 func (m *CoinResp) String() string { return proto.CompactTextString(m) }
 func (*CoinResp) ProtoMessage()    {}
 
-func (m *CoinResp) GetUpdateData() *google_protobuf.Timestamp {
+func (m *CoinResp) GetUpdateData() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.UpdateData
 	}
 	return nil
 }
 
-func (m *CoinResp) GetTime() *google_protobuf.Timestamp {
+func (m *CoinResp) GetTime() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Time
 	}
@@ -712,35 +714,35 @@ func (*OneCoinTrans) ProtoMessage()    {}
 
 // Информация о монете
 type CoinMarketCapData struct {
-	Name                 string                     `protobuf:"bytes,1,opt" json:"Name,omitempty"`
-	CoinSymbol           string                     `protobuf:"bytes,2,opt" json:"CoinSymbol,omitempty"`
-	CoinURL              string                     `protobuf:"bytes,3,opt" json:"CoinURL,omitempty"`
-	CoinLogoImg          string                     `protobuf:"bytes,4,opt" json:"CoinLogoImg,omitempty"`
-	CoinDesc             string                     `protobuf:"bytes,5,opt" json:"CoinDesc,omitempty"`
-	Time                 *google_protobuf.Timestamp `protobuf:"bytes,6,opt" json:"Time,omitempty"`
-	TimeUpdate           *google_protobuf.Timestamp `protobuf:"bytes,7,opt" json:"TimeUpdate,omitempty"`
-	InitialAmount        float32                    `protobuf:"fixed32,8,opt" json:"InitialAmount,omitempty"`
-	InitialReserve       float32                    `protobuf:"fixed32,9,opt" json:"InitialReserve,omitempty"`
-	ConstantReserveRatio int32                      `protobuf:"varint,10,opt" json:"ConstantReserveRatio,omitempty"`
-	VolumeNow            float32                    `protobuf:"fixed32,11,opt" json:"VolumeNow,omitempty"`
-	ReserveBalanceNow    float32                    `protobuf:"fixed32,12,opt" json:"ReserveBalanceNow,omitempty"`
-	Creator              string                     `protobuf:"bytes,13,opt" json:"Creator,omitempty"`
-	AmntTrans24X7        int32                      `protobuf:"varint,14,opt,name=AmntTrans24x7" json:"AmntTrans24x7,omitempty"`
-	Transactions         []*CoinActionpData         `protobuf:"bytes,15,rep" json:"Transactions,omitempty"`
+	Name                 string                      `protobuf:"bytes,1,opt" json:"Name,omitempty"`
+	CoinSymbol           string                      `protobuf:"bytes,2,opt" json:"CoinSymbol,omitempty"`
+	CoinURL              string                      `protobuf:"bytes,3,opt" json:"CoinURL,omitempty"`
+	CoinLogoImg          string                      `protobuf:"bytes,4,opt" json:"CoinLogoImg,omitempty"`
+	CoinDesc             string                      `protobuf:"bytes,5,opt" json:"CoinDesc,omitempty"`
+	Time                 *google_protobuf1.Timestamp `protobuf:"bytes,6,opt" json:"Time,omitempty"`
+	TimeUpdate           *google_protobuf1.Timestamp `protobuf:"bytes,7,opt" json:"TimeUpdate,omitempty"`
+	InitialAmount        float32                     `protobuf:"fixed32,8,opt" json:"InitialAmount,omitempty"`
+	InitialReserve       float32                     `protobuf:"fixed32,9,opt" json:"InitialReserve,omitempty"`
+	ConstantReserveRatio int32                       `protobuf:"varint,10,opt" json:"ConstantReserveRatio,omitempty"`
+	VolumeNow            float32                     `protobuf:"fixed32,11,opt" json:"VolumeNow,omitempty"`
+	ReserveBalanceNow    float32                     `protobuf:"fixed32,12,opt" json:"ReserveBalanceNow,omitempty"`
+	Creator              string                      `protobuf:"bytes,13,opt" json:"Creator,omitempty"`
+	AmntTrans24X7        int32                       `protobuf:"varint,14,opt,name=AmntTrans24x7" json:"AmntTrans24x7,omitempty"`
+	Transactions         []*CoinActionpData          `protobuf:"bytes,15,rep" json:"Transactions,omitempty"`
 }
 
 func (m *CoinMarketCapData) Reset()         { *m = CoinMarketCapData{} }
 func (m *CoinMarketCapData) String() string { return proto.CompactTextString(m) }
 func (*CoinMarketCapData) ProtoMessage()    {}
 
-func (m *CoinMarketCapData) GetTime() *google_protobuf.Timestamp {
+func (m *CoinMarketCapData) GetTime() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Time
 	}
 	return nil
 }
 
-func (m *CoinMarketCapData) GetTimeUpdate() *google_protobuf.Timestamp {
+func (m *CoinMarketCapData) GetTimeUpdate() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.TimeUpdate
 	}
@@ -756,22 +758,22 @@ func (m *CoinMarketCapData) GetTransactions() []*CoinActionpData {
 
 // Движение монеты
 type CoinActionpData struct {
-	Hash        string                     `protobuf:"bytes,1,opt" json:"Hash,omitempty"`
-	Time        *google_protobuf.Timestamp `protobuf:"bytes,2,opt" json:"Time,omitempty"`
-	Type        int32                      `protobuf:"varint,3,opt" json:"Type,omitempty"`
-	CoinToBuy   string                     `protobuf:"bytes,4,opt" json:"CoinToBuy,omitempty"`
-	CoinToSell  string                     `protobuf:"bytes,5,opt" json:"CoinToSell,omitempty"`
-	ValueToBuy  float32                    `protobuf:"fixed32,6,opt" json:"ValueToBuy,omitempty"`
-	ValueToSell float32                    `protobuf:"fixed32,7,opt" json:"ValueToSell,omitempty"`
-	Price       float32                    `protobuf:"fixed32,8,opt" json:"Price,omitempty"`
-	Volume      float32                    `protobuf:"fixed32,9,opt" json:"Volume,omitempty"`
+	Hash        string                      `protobuf:"bytes,1,opt" json:"Hash,omitempty"`
+	Time        *google_protobuf1.Timestamp `protobuf:"bytes,2,opt" json:"Time,omitempty"`
+	Type        int32                       `protobuf:"varint,3,opt" json:"Type,omitempty"`
+	CoinToBuy   string                      `protobuf:"bytes,4,opt" json:"CoinToBuy,omitempty"`
+	CoinToSell  string                      `protobuf:"bytes,5,opt" json:"CoinToSell,omitempty"`
+	ValueToBuy  float32                     `protobuf:"fixed32,6,opt" json:"ValueToBuy,omitempty"`
+	ValueToSell float32                     `protobuf:"fixed32,7,opt" json:"ValueToSell,omitempty"`
+	Price       float32                     `protobuf:"fixed32,8,opt" json:"Price,omitempty"`
+	Volume      float32                     `protobuf:"fixed32,9,opt" json:"Volume,omitempty"`
 }
 
 func (m *CoinActionpData) Reset()         { *m = CoinActionpData{} }
 func (m *CoinActionpData) String() string { return proto.CompactTextString(m) }
 func (*CoinActionpData) ProtoMessage()    {}
 
-func (m *CoinActionpData) GetTime() *google_protobuf.Timestamp {
+func (m *CoinActionpData) GetTime() *google_protobuf1.Timestamp {
 	if m != nil {
 		return m.Time
 	}
@@ -1031,6 +1033,7 @@ type PlatformAPIClient interface {
 	BlockOne(ctx context.Context, in *BlockInfoReq, opts ...grpc.CallOption) (*RetJSONBlock, error)
 	TransactionOne(ctx context.Context, in *TrxInfoReq, opts ...grpc.CallOption) (*RetJSONTrx, error)
 	NodeOne(ctx context.Context, in *NodeInfoReq, opts ...grpc.CallOption) (*RetJSONNode, error)
+	// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
 	BlocksList(ctx context.Context, in *BlocksListReq, opts ...grpc.CallOption) (*BlocksListResp, error)
 	TransactionsList(ctx context.Context, in *TrxsListReq, opts ...grpc.CallOption) (*TrxsListResp, error)
 	NodesList(ctx context.Context, in *NilReq, opts ...grpc.CallOption) (*NodesListResp, error)
@@ -1344,6 +1347,7 @@ type PlatformAPIServer interface {
 	BlockOne(context.Context, *BlockInfoReq) (*RetJSONBlock, error)
 	TransactionOne(context.Context, *TrxInfoReq) (*RetJSONTrx, error)
 	NodeOne(context.Context, *NodeInfoReq) (*RetJSONNode, error)
+	// получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
 	BlocksList(context.Context, *BlocksListReq) (*BlocksListResp, error)
 	TransactionsList(context.Context, *TrxsListReq) (*TrxsListResp, error)
 	NodesList(context.Context, *NilReq) (*NodesListResp, error)
