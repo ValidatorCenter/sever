@@ -26,4 +26,4 @@ install: bin/vcapid
 	cp etc/vcapid.service /lib/systemd/system
 	systemctl daemon-reload
 
-.PHONY: all generate check-vars
+.PHONY: all generate check-vars bin/* clean test
