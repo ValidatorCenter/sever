@@ -1,9 +1,19 @@
 syntax = "proto3";
 
-import "google/api/annotations.proto";
-import "google/protobuf/timestamp.proto";
-
 option go_package = "defs";
+
+message Timestamp {
+  // Represents seconds of UTC time since Unix epoch
+  // 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+  // 9999-12-31T23:59:59Z inclusive.
+  int64 seconds = 1;
+
+  // Non-negative fractions of a second at nanosecond resolution. Negative
+  // second values with fractions must still have non-negative nanos values
+  // that count forward in time. Must be from 0 to 999,999,999
+  // inclusive.
+  int32 nanos = 2;
+}
 
 message NilReq {
     bool Nil = 1;
@@ -33,7 +43,7 @@ message ReturnAPITask {
 // Задачи для исполнения ноде
 message TaskOne {
     bool Done = 1; // выполнено
-    google.protobuf.Timestamp Created = 2; // создана time
+    Timestamp Created = 2; // создана time
     string Type = 3; // тип задачи: SEND-CASHBACK,...
     uint32 Height = 4; // блок
     string PubKey = 5; // мастернода
@@ -61,7 +71,7 @@ message TodoOneQ {
     uint32 Height = 2; // блок
     string PubKey = 3; // мастернода
     string Address = 4; // адрес кошелька X
-    google.protobuf.Timestamp Created = 5; // создана time
+    Timestamp Created = 5; // создана time
     float Amount = 6; // сумма
 }
 //----- ATasks-IN
@@ -83,7 +93,7 @@ message Block1 {
     string Hash = 1;
     string HashMin = 2;
     int32 Height = 3;
-    google.protobuf.Timestamp Time = 4;
+    Timestamp Time = 4;
     string Age = 5;
     int32 NumTxs = 6;
     int32 TotalTxs = 7;
@@ -197,7 +207,7 @@ message NodeExt2 {
     string ValidatorLogoImg = 3;
     string ValidatorDesc = 4;
     float Uptime = 5;
-    google.protobuf.Timestamp Created = 6; // дата создания
+    Timestamp Created = 6; // дата создания
     string RewardAddress = 7; // Адрес кошелька "Mx..." вознаграждения
     string OwnerAddress = 8; // Адрес кошелька "Mx..." основной
     float TotalStake = 9; // Полный стэк
@@ -207,7 +217,7 @@ message NodeExt2 {
     int32 Commission = 13; // комиссия
     int32 CreatedAtBlock = 14; // блок создания
     int32 StatusInt = 15; // числовое значение статуса: 1 - Offline, 2 - Online, 77 - Validator
-    google.protobuf.Timestamp TimeUpdate = 16; // UPDATE дата последнего обновления
+    Timestamp TimeUpdate = 16; // UPDATE дата последнего обновления
     repeated StakesInfo Stakes = 17; // Только у: Candidate(по PubKey)
     repeated BlocksStory Blocks = 18; // важные исторические блоки
     uint64 AmntBlocks = 19; // количество "всего"(с пропущенными) блоков в которых является подписантом
@@ -306,8 +316,8 @@ message CoinReq {
 }
 
 message CoinResp {
-    google.protobuf.Timestamp UpdateData = 1;
-    google.protobuf.Timestamp Time = 2;
+    Timestamp UpdateData = 1;
+    Timestamp Time = 2;
     string TitleCoin = 3;
     repeated OneCoinTrans Transactions = 4;
     string Ticker1 = 5;
@@ -345,8 +355,8 @@ message CoinMarketCapData {
     string CoinURL = 3;
     string CoinLogoImg = 4;
     string CoinDesc = 5;
-    google.protobuf.Timestamp Time = 6; // дата создания
-    google.protobuf.Timestamp TimeUpdate = 7; // UPDATE дата последнего обновления
+    Timestamp Time = 6; // дата создания
+    Timestamp TimeUpdate = 7; // UPDATE дата последнего обновления
     float InitialAmount = 8;
     float InitialReserve = 9;
     int32 ConstantReserveRatio = 10; // uint, should be from 10 to 100 (в %).
@@ -360,7 +370,7 @@ message CoinMarketCapData {
 // Движение монеты
 message CoinActionpData {
     string Hash = 1; // Хэш транзакции
-    google.protobuf.Timestamp Time = 2; // дата движения
+    Timestamp Time = 2; // дата движения
     int32 Type = 3; // type: продажа или покупка
     string CoinToBuy = 4; // Монета покупки
     string CoinToSell = 5; // Монета продажи
@@ -545,9 +555,6 @@ service PlatformAPI {
 
     // получить список блоков [замена эндпоинта /blocks и /blocks/:pgn]
     rpc BlocksList (BlocksListReq) returns (BlocksListResp) {
-        option (google.api.http) = {
-			get: "/v1/gateway/blocks"
-		};
     }
 
     // получить список транзакций [замена эндпоинта /transactions и /transactions/:pgn]
