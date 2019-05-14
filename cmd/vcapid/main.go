@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"runtime"
+	"time"
 
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/go-grpc-middleware"
@@ -21,6 +22,11 @@ import (
 var (
 	grpcListen = flag.String("grpc_listen", ":50051", "grpc listen addr")
 	httpListen = flag.String("http_listen", "", "http listen addr")
+
+	clickhouseDsn             = flag.String("clickhouse_dsn", "http://127.0.0.1:8123/default", "clickhouse instance to connect to")
+	clickhouseMaxOpenConns    = flag.Int("clickhouse_max_open_conns", 50, "clickhouse pool max open conns")
+	clickhouseMaxIdleConns    = flag.Int("clickhouse_max_idle_conns", 10, "clickhouse pool max idle conns")
+	clickhouseConnMaxLifetime = flag.Duration("clickhouse_conn_max_lifetime", 10*time.Minute, "clickhouse pool max conn lifetime")
 )
 
 func run() error {
@@ -38,7 +44,18 @@ func run() error {
 		)),
 	)
 
-	ps := platform.NewHandler()
+	ps, err := platform.NewHandler(&platform.Options{
+		ClickhouseDSN: *clickhouseDsn,
+		ClickhousePoolOpts: &platform.PoolOptions{
+			MaxOpenConns:    *clickhouseMaxOpenConns,
+			MaxIdleConns:    *clickhouseMaxIdleConns,
+			ConnMaxLifetime: *clickhouseConnMaxLifetime,
+		},
+	})
+	if err != nil {
+		glog.Fatalf("unable to setup platform: %s", err)
+	}
+
 	defs.RegisterPlatformAPIServer(gs, ps)
 
 	ctx := context.Background()
