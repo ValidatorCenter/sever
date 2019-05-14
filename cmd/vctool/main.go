@@ -7,11 +7,12 @@ import (
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 	"sever/defs"
+	"strconv"
 	"time"
 )
 
 var (
-	addr = flag.String("addr", "127.0.0.1:9090", "grpc server address")
+	addr = flag.String("addr", "127.0.0.1:50051", "grpc server address")
 )
 
 func run() error{
@@ -25,7 +26,9 @@ func run() error{
 	c := defs.NewPlatformAPIClient(conn)
 	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 
-	r, err := c.SessionCreate(ctx, &defs.SeedPhrase{})
+	args := flag.Args()
+	number, _ := strconv.Atoi(args[0])
+	r, err := c.BlockOne(ctx, &defs.BlockInfoReq{Number: uint32(number)})
 	glog.Infof("result: %+v", r)
 	if err != nil {
 		glog.Errorf("error: %+v", err)

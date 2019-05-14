@@ -3,6 +3,11 @@ package platform
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
+
+	"github.com/mailru/dbr"
+	_ "github.com/mailru/go-clickhouse"
 
 	"sever/defs"
 )
@@ -11,10 +16,34 @@ var (
 	ErrPanic = errors.New("cleverly done, but you are not supposed to be here")
 )
 
-type Handler struct{}
+type Options struct {
+	ClickhouseDSN      string
+	ClickhousePoolOpts *PoolOptions
+}
 
-func NewHandler() *Handler {
-	return &Handler{}
+type PoolOptions struct {
+	MaxOpenConns    int
+	MaxIdleConns    int
+	ConnMaxLifetime time.Duration
+}
+
+type Handler struct {
+	db *dbr.Connection
+}
+
+func NewHandler(opts *Options) (*Handler, error) {
+	db, err := dbr.Open("clickhouse", opts.ClickhouseDSN, &dbr.NullEventReceiver{})
+	if err != nil {
+		return nil, fmt.Errorf("cannot open db: %s", err)
+	}
+
+	if opts.ClickhousePoolOpts != nil {
+		db.SetMaxOpenConns(opts.ClickhousePoolOpts.MaxOpenConns)
+		db.SetMaxIdleConns(opts.ClickhousePoolOpts.MaxIdleConns)
+		db.SetConnMaxLifetime(opts.ClickhousePoolOpts.ConnMaxLifetime)
+	}
+
+	return &Handler{db: db,}, nil
 }
 
 func (*Handler) SessionCreate(context.Context, *defs.SeedPhrase) (*defs.SessionID, error) {
@@ -41,8 +70,24 @@ func (*Handler) AutoTaskIn(context.Context, *defs.ResQ) (*defs.NodeTodoQ, error)
 	panic("implement me")
 }
 
-func (*Handler) BlockOne(context.Context, *defs.BlockInfoReq) (*defs.RetJSONBlock, error) {
-	panic("implement me")
+func (h *Handler) BlockOne(ctx context.Context, req *defs.BlockInfoReq) (*defs.RetJSONBlock, error) {
+	s := h.db.NewSessionContext(ctx, nil)
+
+	q := s.Select("*").From("blocks").Where("height_i32 = ?", req.Number)
+	var block struct {
+		ID    string `db:"hash"`
+		Dummy string `db:"-"`
+	}
+
+	if err := q.LoadStruct(&block); err != nil {
+		return nil, fmt.Errorf("unable to load block: %s", err)
+	}
+
+	return &defs.RetJSONBlock{
+		Block: &defs.Block1{
+			Hash: block.ID,
+		},
+	}, nil
 }
 
 func (*Handler) TransactionOne(context.Context, *defs.TrxInfoReq) (*defs.RetJSONTrx, error) {

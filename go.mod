@@ -15,6 +15,8 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.8.6
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/kr/pty v1.1.4 // indirect
+	github.com/mailru/dbr v3.0.0+incompatible
+	github.com/mailru/go-clickhouse v1.1.0
 	github.com/prometheus/client_golang v0.9.2 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a // indirect
 	github.com/rogpeppe/fastuuid v1.1.0 // indirect
