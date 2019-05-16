@@ -7,7 +7,6 @@ import (
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 	"sever/defs"
-	"strconv"
 	"time"
 )
 
@@ -26,9 +25,7 @@ func run() error{
 	c := defs.NewPlatformAPIClient(conn)
 	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 
-	args := flag.Args()
-	number, _ := strconv.Atoi(args[0])
-	r, err := c.BlockOne(ctx, &defs.BlockInfoReq{Number: uint32(number)})
+	r, err := c.BlocksList(ctx, &defs.BlocksListReq{})
 	glog.Infof("result: %+v", r)
 	if err != nil {
 		glog.Errorf("error: %+v", err)

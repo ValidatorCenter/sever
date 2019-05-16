@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/golang/glog"
 	"time"
 
 	"github.com/mailru/dbr"
@@ -98,8 +99,46 @@ func (*Handler) NodeOne(context.Context, *defs.NodeInfoReq) (*defs.RetJSONNode, 
 	panic("implement me")
 }
 
-func (*Handler) BlocksList(context.Context, *defs.BlocksListReq) (*defs.BlocksListResp, error) {
-	panic("implement me")
+// FIXME(m.galaganov): implementation not complete
+func (h *Handler) BlocksList(ctx context.Context, req *defs.BlocksListReq) (*defs.BlocksListResp, error) {
+	s := h.db.NewSessionContext(ctx, nil)
+
+	q := s.Select("*").From("blocks")
+	var blocks []struct {
+		Hash     string    `db:"hash"`
+		Height   uint32    `db:"height_i32"`
+		Time     time.Time `db:"time"`
+		TxN      uint32    `db:"num_txs_i32"`
+		TxTotal  uint32    `db:"total_txs_i32"`
+		Reward   float32   `db:"block_reward_f32"`
+		Size     uint32    `db:"size_i32"`
+		Proposer string    `db:"hash"`
+	}
+
+	n, err := q.LoadStructs(&blocks)
+	if err != nil {
+		return nil, fmt.Errorf("unable to load block: %s", err)
+	}
+
+	glog.Infof("loaded %d blocks", n)
+
+	var retBlocks []*defs.Block1
+	for _, v := range blocks {
+		retBlocks = append(retBlocks, &defs.Block1{
+			Hash:    v.Hash,
+			HashMin: v.Hash,
+			Height:  int32(v.Height),
+			Time: &defs.Timestamp{
+				Seconds: int64(v.Time.Second()),
+				Nanos:   int32(v.Time.Nanosecond()),
+			},
+			NumTxs:   int32(v.TxN),
+			TotalTxs: int32(v.TxTotal),
+			Proposer: v.Proposer,
+		})
+	}
+
+	return &defs.BlocksListResp{AllBlocks: retBlocks}, nil
 }
 
 func (*Handler) TransactionsList(context.Context, *defs.TrxsListReq) (*defs.TrxsListResp, error) {
