@@ -36,7 +36,7 @@ require (
 	golang.org/x/tools v0.0.0-20190511041617-99f201b6807e // indirect
 	google.golang.org/api v0.5.0 // indirect
 	google.golang.org/appengine v1.5.0 // indirect
-	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8
+	google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8 // indirect
 	google.golang.org/grpc v1.20.1
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 	honnef.co/go/tools v0.0.0-20190418001031-e561f6794a2a // indirect
