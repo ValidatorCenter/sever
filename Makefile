@@ -1,4 +1,4 @@
-all: generate bin/vcapid bin/vctool ;
+all: generate bin/vcapid bin/vctool vendor ;
 
 generate:
 	protoc -I./defs \
@@ -13,8 +13,8 @@ bin/vcapid:
 bin/vctool:
 	go build -v -o ./bin/vctool ./cmd/vctool/main.go
 
-test:
-	go test sever/platform
+vendor:
+	go mod vendor
 
 clean:
 	rm -f bin/vcapid bin/vctool

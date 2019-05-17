@@ -87,7 +87,7 @@ func runGateway(ctx context.Context) error {
 func unpanic(p interface{}) (err error) {
 	trace := make([]byte, 8192)
 	n := runtime.Stack(trace, false)
-	glog.Errorf("panic stack trace: %s", string(trace[:n]))
+	glog.Errorf("panic p=`%v'. stack trace: %s", p, string(trace[:n]))
 	return platform.ErrPanic
 }
 
