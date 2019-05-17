@@ -1,8 +1,11 @@
-all: bin/vcapid bin/vctool
-	
+all: generate bin/vcapid bin/vctool ;
 
 generate:
-	protoc -I./defs --js_out=import_style=commonjs,binary:./defs --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./defs --grpc-gateway_out=logtostderr=true,grpc_api_configuration=./defs/api.gw.yaml:./defs --go_out=plugins=grpc:./defs ./defs/api.proto
+	protoc -I./defs \
+	    --js_out=import_style=commonjs,binary:./defs \
+	    --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./defs \
+	    --grpc-gateway_out=logtostderr=true,grpc_api_configuration=./defs/api.gw.yaml:./defs \
+	    --go_out=plugins=grpc:./defs ./defs/api.proto
 
 bin/vcapid:
 	go build -v -o ./bin/vcapid ./cmd/vcapid/main.go

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang/glog"
 	"time"
 
 	"github.com/mailru/dbr"
@@ -99,42 +98,58 @@ func (*Handler) NodeOne(context.Context, *defs.NodeInfoReq) (*defs.RetJSONNode, 
 	panic("implement me")
 }
 
-// FIXME(m.galaganov): implementation not complete
+func packTimestamp(t time.Time) *defs.Timestamp {
+	return &defs.Timestamp{
+		Seconds: int64(t.Second()),
+		Nanos:   int32(t.Nanosecond()),
+	}
+}
+
 func (h *Handler) BlocksList(ctx context.Context, req *defs.BlocksListReq) (*defs.BlocksListResp, error) {
 	s := h.db.NewSessionContext(ctx, nil)
 
-	q := s.Select("*").From("blocks")
+	var pageSize uint64 = 50
+	q := s.Select("*").From("blocks").
+		Offset(uint64(req.Page) * pageSize).Limit(pageSize)
 	var blocks []struct {
-		Hash     string    `db:"hash"`
-		Height   uint32    `db:"height_i32"`
-		Time     time.Time `db:"time"`
-		TxN      uint32    `db:"num_txs_i32"`
-		TxTotal  uint32    `db:"total_txs_i32"`
-		Reward   float32   `db:"block_reward_f32"`
-		Size     uint32    `db:"size_i32"`
-		Proposer string    `db:"hash"`
+		Hash         string    `db:"hash"`
+		Height       int32     `db:"height_i32"`
+		Time         time.Time `db:"time"`
+		NumTxs       int32     `db:"num_txs_i32"`
+		TotalTxs     int32     `db:"total_txs_i32"`
+		Transactions []string  `db:"transactions"`
+		BlockReward  float32   `db:"block_reward_f32"`
+		Size         int32     `db:"size_i32"`
+		Proposer     string    `db:"proposer"`
+		UpdatedDate  time.Time `db:"updated_date"`
 	}
 
-	n, err := q.LoadStructs(&blocks)
+	_, err := q.LoadStructs(&blocks)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load block: %s", err)
 	}
 
-	glog.Infof("loaded %d blocks", n)
-
 	var retBlocks []*defs.Block1
 	for _, v := range blocks {
 		retBlocks = append(retBlocks, &defs.Block1{
-			Hash:    v.Hash,
-			HashMin: v.Hash,
-			Height:  int32(v.Height),
-			Time: &defs.Timestamp{
-				Seconds: int64(v.Time.Second()),
-				Nanos:   int32(v.Time.Nanosecond()),
-			},
-			NumTxs:   int32(v.TxN),
-			TotalTxs: int32(v.TxTotal),
-			Proposer: v.Proposer,
+			Hash:     v.Hash,
+			HashMin:  v.Hash,
+			Height:   v.Height,
+			Time:     packTimestamp(v.Time),
+			// todo Age
+			NumTxs:   v.NumTxs,
+			TotalTxs: v.TotalTxs,
+			// todo Transactions
+			// todo Events
+			// todo Validators
+			Proposer:    v.Proposer,
+			// todo ProposerName
+			// todo ProposerLogo
+			BlockReward: v.BlockReward,
+			Size:        v.Size,
+			// todo TransactionsAmnt
+			// todo EventsAmnt
+			// todo PrecommitsAmnt
 		})
 	}
 
