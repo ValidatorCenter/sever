@@ -1,0 +1,1101 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "ActionResp": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "TrxHash": {
+          "type": "string"
+        },
+        "ErrMsg": {
+          "type": "string"
+        }
+      },
+      "title": "+---- Wallet-Action\nРезультат выполнения операции"
+    },
+    "Block1": {
+      "type": "object",
+      "properties": {
+        "Hash": {
+          "type": "string"
+        },
+        "HashMin": {
+          "type": "string"
+        },
+        "Height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Time": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Age": {
+          "type": "string"
+        },
+        "NumTxs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TotalTxs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Block1Transaction"
+          }
+        },
+        "Events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Block1Events"
+          }
+        },
+        "Validators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Block1Validator"
+          }
+        },
+        "Proposer": {
+          "type": "string"
+        },
+        "ProposerName": {
+          "type": "string"
+        },
+        "ProposerLogo": {
+          "type": "string"
+        },
+        "BlockReward": {
+          "type": "number",
+          "format": "float"
+        },
+        "Size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TransactionsAmnt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "EventsAmnt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "PrecommitsAmnt": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Структура одного блока для вывода на страницу"
+    },
+    "Block1Events": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "type": "string"
+        },
+        "TypeTxt": {
+          "type": "string"
+        },
+        "Role": {
+          "type": "string"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "AddressMin": {
+          "type": "string"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "float"
+        },
+        "Coin": {
+          "type": "string"
+        },
+        "ValidatorPubKey": {
+          "type": "string"
+        },
+        "ValidatorPubKeyMin": {
+          "type": "string"
+        }
+      },
+      "title": "Структура одного события в блоке для вывода на страницу"
+    },
+    "Block1Transaction": {
+      "type": "object",
+      "properties": {
+        "Hash": {
+          "type": "string"
+        },
+        "HashMin": {
+          "type": "string"
+        },
+        "From": {
+          "type": "string"
+        },
+        "FromMin": {
+          "type": "string"
+        },
+        "Nonce": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "GasPrice": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TypeTxt": {
+          "type": "string"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "float"
+        },
+        "Payload": {
+          "type": "string"
+        },
+        "Gas": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "GasCoin": {
+          "type": "string"
+        },
+        "GasUsed": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Структура одной транзакции в блоке для вывода на страницу"
+    },
+    "Block1Validator": {
+      "type": "object",
+      "properties": {
+        "PubKey": {
+          "type": "string"
+        },
+        "Signed": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Logo": {
+          "type": "string"
+        }
+      },
+      "title": "Структура одного валидатор в блоке для вывода на страницу"
+    },
+    "BlocksListResp": {
+      "type": "object",
+      "properties": {
+        "AllBlocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Block1"
+          }
+        },
+        "TotalBlock": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Доп.инфа по кол.блоков"
+        },
+        "MinBlock": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "MaxBlock": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnLL": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Кнопки навигации по страницам:"
+        },
+        "BtnL": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnR": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnRR": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "BlocksStory": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Type": {
+          "type": "string"
+        }
+      }
+    },
+    "CoinActionpData": {
+      "type": "object",
+      "properties": {
+        "Hash": {
+          "type": "string"
+        },
+        "Time": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CoinToBuy": {
+          "type": "string"
+        },
+        "CoinToSell": {
+          "type": "string"
+        },
+        "ValueToBuy": {
+          "type": "number",
+          "format": "float"
+        },
+        "ValueToSell": {
+          "type": "number",
+          "format": "float"
+        },
+        "Price": {
+          "type": "number",
+          "format": "float"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "Движение монеты"
+    },
+    "CoinBaseResp": {
+      "type": "object",
+      "properties": {
+        "Ticker": {
+          "type": "string"
+        }
+      },
+      "title": "+---- BIP/MNT"
+    },
+    "CoinMarketCapData": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "CoinSymbol": {
+          "type": "string"
+        },
+        "CoinURL": {
+          "type": "string"
+        },
+        "CoinLogoImg": {
+          "type": "string"
+        },
+        "CoinDesc": {
+          "type": "string"
+        },
+        "Time": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "TimeUpdate": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "InitialAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "InitialReserve": {
+          "type": "number",
+          "format": "float"
+        },
+        "ConstantReserveRatio": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "VolumeNow": {
+          "type": "number",
+          "format": "float"
+        },
+        "ReserveBalanceNow": {
+          "type": "number",
+          "format": "float"
+        },
+        "Creator": {
+          "type": "string"
+        },
+        "AmntTrans24x7": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoinActionpData"
+          }
+        }
+      },
+      "title": "Информация о монете"
+    },
+    "CoinResp": {
+      "type": "object",
+      "properties": {
+        "UpdateData": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Time": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "TitleCoin": {
+          "type": "string"
+        },
+        "Transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OneCoinTrans"
+          }
+        },
+        "Ticker1": {
+          "type": "string"
+        },
+        "Ticker2": {
+          "type": "string"
+        },
+        "Other2Coins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "PriceNowBuy": {
+          "type": "string"
+        },
+        "PriceNowSell": {
+          "type": "string"
+        },
+        "Change24": {
+          "type": "number",
+          "format": "float"
+        },
+        "Volume24": {
+          "type": "number",
+          "format": "float"
+        },
+        "MyCoin": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Creator": {
+          "type": "string"
+        },
+        "CreatorTXT": {
+          "type": "string"
+        },
+        "CRR_prc": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "InitialAmount": {
+          "type": "string"
+        },
+        "InitialReserve": {
+          "type": "string"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "float"
+        },
+        "ReserveBalance": {
+          "type": "string"
+        },
+        "CoinInf": {
+          "$ref": "#/definitions/CoinMarketCapData"
+        }
+      }
+    },
+    "CoinView": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "Ticker": {
+          "type": "string"
+        },
+        "CoinLogoImg": {
+          "type": "string"
+        },
+        "PriceBuy": {
+          "type": "string"
+        },
+        "PriceBuyUSD": {
+          "type": "string"
+        },
+        "Volume24": {
+          "type": "string"
+        },
+        "Change24": {
+          "type": "string"
+        },
+        "Change24f32": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "CoinsListResp": {
+      "type": "object",
+      "properties": {
+        "AllCoins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoinView"
+          }
+        }
+      },
+      "title": "+---- Coins-List"
+    },
+    "Delegate": {
+      "type": "object",
+      "properties": {
+        "Validator": {
+          "type": "string"
+        },
+        "ValidatorMin": {
+          "type": "string"
+        },
+        "Coin": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "number",
+          "format": "float"
+        },
+        "ValueBip": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "NilReq": {
+      "type": "object",
+      "properties": {
+        "Nil": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "NodeExt2": {
+      "type": "object",
+      "properties": {
+        "ValidatorName": {
+          "type": "string"
+        },
+        "ValidatorURL": {
+          "type": "string"
+        },
+        "ValidatorLogoImg": {
+          "type": "string"
+        },
+        "ValidatorDesc": {
+          "type": "string"
+        },
+        "Uptime": {
+          "type": "number",
+          "format": "float"
+        },
+        "Created": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "RewardAddress": {
+          "type": "string"
+        },
+        "OwnerAddress": {
+          "type": "string"
+        },
+        "TotalStake": {
+          "type": "number",
+          "format": "float"
+        },
+        "PubKey": {
+          "type": "string"
+        },
+        "PubKeyMin": {
+          "type": "string"
+        },
+        "ValidatorAddress": {
+          "type": "string"
+        },
+        "Commission": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CreatedAtBlock": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "StatusInt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TimeUpdate": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Stakes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StakesInfo"
+          }
+        },
+        "Blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlocksStory"
+          }
+        },
+        "AmntBlocks": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "AmntSlashed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "AmnNoBlocks": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "AmntSlots": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CommissionNow": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "NodeTodoQ": {
+      "type": "object",
+      "properties": {
+        "TxHash": {
+          "type": "string"
+        },
+        "QList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TodoOneQ"
+          }
+        }
+      },
+      "title": "Результат выполнения задач валидатора"
+    },
+    "NodesListResp": {
+      "type": "object",
+      "properties": {
+        "AllCandidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeExt2"
+          }
+        }
+      },
+      "title": "+---- Nodes-List"
+    },
+    "OneCoinTrans": {
+      "type": "object",
+      "properties": {
+        "Date": {
+          "type": "string"
+        },
+        "Open": {
+          "type": "number",
+          "format": "float"
+        },
+        "High": {
+          "type": "number",
+          "format": "float"
+        },
+        "Low": {
+          "type": "number",
+          "format": "float"
+        },
+        "Close": {
+          "type": "number",
+          "format": "float"
+        },
+        "Volume": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "Структура Японской-Свечки для графиков"
+    },
+    "ResReward": {
+      "type": "object",
+      "properties": {
+        "Role": {
+          "type": "string"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "PubKey": {
+          "type": "string"
+        },
+        "Amnt": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "Награда"
+    },
+    "RetJSONBlock": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Block": {
+          "$ref": "#/definitions/Block1"
+        },
+        "ErrMsg": {
+          "type": "string"
+        }
+      },
+      "title": "Структура возврата блока в виде JSON"
+    },
+    "RetJSONNode": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Node": {
+          "$ref": "#/definitions/NodeExt2"
+        },
+        "Rewards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResReward"
+          }
+        },
+        "ErrMsg": {
+          "type": "string"
+        }
+      },
+      "title": "Структура возврата блока в виде JSON"
+    },
+    "RetJSONTrx": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Trx": {
+          "$ref": "#/definitions/Trans1"
+        },
+        "ErrMsg": {
+          "type": "string"
+        }
+      },
+      "title": "Структура возврата транзакции в виде JSON"
+    },
+    "ReturnAPITask": {
+      "type": "object",
+      "properties": {
+        "WalletCash": {
+          "type": "number",
+          "format": "float"
+        },
+        "List": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskOne"
+          }
+        }
+      }
+    },
+    "SeedPhrase": {
+      "type": "object",
+      "properties": {
+        "Mnemonic": {
+          "type": "string"
+        }
+      }
+    },
+    "SessionID": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string"
+        }
+      },
+      "title": "+---- Account"
+    },
+    "StakesInfo": {
+      "type": "object",
+      "properties": {
+        "Owner": {
+          "type": "string"
+        },
+        "Coin": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "number",
+          "format": "float"
+        },
+        "BipValue": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "стэк кандидата/валидатора в каких монетах"
+    },
+    "SyncResp": {
+      "type": "object",
+      "properties": {
+        "LastSync": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Current": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ChainNet": {
+          "type": "string"
+        }
+      },
+      "title": "+---- Sync"
+    },
+    "TaskOne": {
+      "type": "object",
+      "properties": {
+        "Done": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Created": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Height": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "PubKey": {
+          "type": "string"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "Задачи для исполнения ноде"
+    },
+    "TasksListResp": {
+      "type": "object",
+      "properties": {
+        "List": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskOne"
+          }
+        },
+        "BtnNow": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Кнопки навигации по страницам:"
+        },
+        "BtnL": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnR": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnRR": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Timestamp": {
+      "type": "object",
+      "properties": {
+        "seconds": {
+          "type": "string",
+          "format": "int64",
+          "description": "Represents seconds of UTC time since Unix epoch\n1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to\n9999-12-31T23:59:59Z inclusive."
+        },
+        "nanos": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Non-negative fractions of a second at nanosecond resolution. Negative\nsecond values with fractions must still have non-negative nanos values\nthat count forward in time. Must be from 0 to 999,999,999\ninclusive."
+        }
+      }
+    },
+    "TodoOneQ": {
+      "type": "object",
+      "properties": {
+        "Type": {
+          "type": "string"
+        },
+        "Height": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "PubKey": {
+          "type": "string"
+        },
+        "Address": {
+          "type": "string"
+        },
+        "Created": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "title": "Идентификатор одной задачи"
+    },
+    "Trans1": {
+      "type": "object",
+      "properties": {
+        "Status": {
+          "type": "string"
+        },
+        "Hash": {
+          "type": "string"
+        },
+        "HashMin": {
+          "type": "string"
+        },
+        "Height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Index": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "From": {
+          "type": "string"
+        },
+        "FromMin": {
+          "type": "string"
+        },
+        "Nonce": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "GasPrice": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "GasCoin": {
+          "type": "string"
+        },
+        "GasUsed": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "GasFee": {
+          "type": "number",
+          "format": "float"
+        },
+        "Type": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "TypeTxt": {
+          "type": "string"
+        },
+        "Payload": {
+          "type": "string"
+        },
+        "Code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Log": {
+          "type": "string"
+        },
+        "Amount": {
+          "type": "number",
+          "format": "float"
+        },
+        "TxCoinToBuy": {
+          "type": "string"
+        },
+        "TxCoinToSell": {
+          "type": "string"
+        },
+        "TxFrom": {
+          "type": "string"
+        },
+        "TxReturn": {
+          "type": "number",
+          "format": "float"
+        },
+        "TxSellAmount": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "TrxsListResp": {
+      "type": "object",
+      "properties": {
+        "AllTrns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Trans1"
+          }
+        },
+        "TotalBlock": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Доп.инфа по кол.блоков"
+        },
+        "BtnNow": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Кнопки навигации по страницам:"
+        },
+        "BtnL": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnR": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "BtnRR": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "WalletCoin1": {
+      "type": "object",
+      "properties": {
+        "Ticker": {
+          "type": "string"
+        },
+        "Amnt": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "WalletDelegateResp": {
+      "type": "object",
+      "properties": {
+        "AllDeleg": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Delegate"
+          }
+        },
+        "TotalDelegate": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "WalletReq": {
+      "type": "object",
+      "properties": {
+        "Wallet": {
+          "type": "string"
+        }
+      },
+      "title": "+---- Wallet-1"
+    },
+    "WalletResp": {
+      "type": "object",
+      "properties": {
+        "WalletCoins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WalletCoin1"
+          }
+        },
+        "TotalAmntInBaseCoin": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "WalletRewardsResp": {
+      "type": "object",
+      "properties": {
+        "AllReward": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResReward"
+          }
+        },
+        "TotalReward": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    }
+  }
+}
