@@ -33,8 +33,8 @@ type ClickhouseOptions struct {
 }
 
 type Handler struct {
-	re *redis.Client // please use re.WithContext(ctx)
-	db *dbr.Connection
+	re func(context.Context) *redis.Client
+	db func(context.Context) *dbr.Session
 }
 
 func NewHandler(opts *Options) (*Handler, error) {
@@ -61,7 +61,14 @@ func NewHandler(opts *Options) (*Handler, error) {
 		opts.Clickhouse.Configure(db)
 	}
 
-	return &Handler{re: re, db: db}, nil
+	return &Handler{
+		re: func(ctx context.Context) *redis.Client {
+			return re.WithContext(ctx)
+		},
+		db: func(ctx context.Context) *dbr.Session {
+			return db.NewSessionContext(ctx, nil)
+		},
+	}, nil
 }
 
 func (*Handler) SessionCreate(context.Context, *defs.SeedPhrase) (*defs.SessionID, error) {
@@ -89,8 +96,7 @@ func (*Handler) AutoTaskIn(context.Context, *defs.ResQ) (*defs.NodeTodoQ, error)
 }
 
 func (h *Handler) BlockOne(ctx context.Context, req *defs.BlockInfoReq) (*defs.RetJSONBlock, error) {
-	s := h.db.NewSessionContext(ctx, nil)
-
+	s := h.db(ctx)
 	q := s.Select("*").From("blocks").Where("height_i32 = ?", req.Number)
 	var block struct {
 		ID    string `db:"hash"`
@@ -124,8 +130,7 @@ func packTimestamp(t time.Time) *defs.Timestamp {
 }
 
 func (h *Handler) BlocksList(ctx context.Context, req *defs.BlocksListReq) (*defs.BlocksListResp, error) {
-	s := h.db.NewSessionContext(ctx, nil)
-
+	s := h.db(ctx)
 	var pageSize uint64 = 50
 	q := s.Select("*").From("blocks").
 		Offset(uint64(req.Page) * pageSize).Limit(pageSize)
