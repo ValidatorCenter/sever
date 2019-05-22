@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/go-redis/redis"
+	"github.com/mailru/dbr"
 	"net"
 	"net/http"
 	"runtime"
@@ -22,6 +24,14 @@ import (
 var (
 	grpcListen = flag.String("grpc_listen", ":50051", "grpc listen addr")
 	httpListen = flag.String("http_listen", "", "http listen addr")
+
+	redisDsn                = flag.String("redis_dsn", "redis://127.0.0.1:6379/0", "redis instance to connect to")
+	redisPoolSize           = flag.Int("redis_pool_size", 0, "redis client pool size option")
+	redisMinIdleConns       = flag.Int("redis_min_idle_conns", 0, "redis client min idle conns option")
+	redisMaxConnAge         = flag.Duration("redis_max_conn_age", 0, "redis client max conn age option")
+	redisPoolTimeout        = flag.Duration("redis_pool_timeout", 0, "redis client pool timeout option")
+	redisIdleTimeout        = flag.Duration("redis_idle_timeout", 0, "redis client idle timeout option")
+	redisIdleCheckFrequency = flag.Duration("redis_idle_check_frequency", 0, "redis client idle check frequency option")
 
 	clickhouseDsn             = flag.String("clickhouse_dsn", "http://127.0.0.1:8123/default", "clickhouse instance to connect to")
 	clickhouseMaxOpenConns    = flag.Int("clickhouse_max_open_conns", 50, "clickhouse pool max open conns")
@@ -45,11 +55,24 @@ func run() error {
 	)
 
 	ps, err := platform.NewHandler(&platform.Options{
-		ClickhouseDSN: *clickhouseDsn,
-		ClickhousePoolOpts: &platform.PoolOptions{
-			MaxOpenConns:    *clickhouseMaxOpenConns,
-			MaxIdleConns:    *clickhouseMaxIdleConns,
-			ConnMaxLifetime: *clickhouseConnMaxLifetime,
+		Redis: platform.RedisOptions{
+			DSN: *redisDsn,
+			Configure: func(o *redis.Options) {
+				o.PoolSize = *redisPoolSize
+				o.MinIdleConns = *redisMinIdleConns
+				o.MaxConnAge = *redisMaxConnAge
+				o.PoolTimeout = *redisPoolTimeout
+				o.IdleTimeout = *redisIdleTimeout
+				o.IdleCheckFrequency = *redisIdleCheckFrequency
+			},
+		},
+		Clickhouse: platform.ClickhouseOptions{
+			DSN: *clickhouseDsn,
+			Configure: func(db *dbr.Connection) {
+				db.SetMaxOpenConns(*clickhouseMaxOpenConns)
+				db.SetMaxIdleConns(*clickhouseMaxIdleConns)
+				db.SetConnMaxLifetime(*clickhouseConnMaxLifetime)
+			},
 		},
 	})
 	if err != nil {

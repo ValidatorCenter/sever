@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/go-redis/redis"
 	"time"
 
 	"github.com/mailru/dbr"
@@ -17,33 +18,50 @@ var (
 )
 
 type Options struct {
-	ClickhouseDSN      string
-	ClickhousePoolOpts *PoolOptions
+	Redis      RedisOptions
+	Clickhouse ClickhouseOptions
 }
 
-type PoolOptions struct {
-	MaxOpenConns    int
-	MaxIdleConns    int
-	ConnMaxLifetime time.Duration
+type RedisOptions struct {
+	DSN       string
+	Configure func(*redis.Options)
+}
+
+type ClickhouseOptions struct {
+	DSN       string
+	Configure func(*dbr.Connection)
 }
 
 type Handler struct {
+	re *redis.Client // please use re.WithContext(ctx)
 	db *dbr.Connection
 }
 
 func NewHandler(opts *Options) (*Handler, error) {
-	db, err := dbr.Open("clickhouse", opts.ClickhouseDSN, &dbr.NullEventReceiver{})
+	redisOpts, err := redis.ParseURL(opts.Redis.DSN)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse redis dsn: %s", err)
+	}
+
+	if opts.Redis.Configure != nil {
+		opts.Redis.Configure(redisOpts)
+	}
+
+	re := redis.NewClient(redisOpts)
+	if _, err := re.Ping().Result(); err != nil {
+		return nil, fmt.Errorf("cannot ping redis: %s", err)
+	}
+
+	db, err := dbr.Open("clickhouse", opts.Clickhouse.DSN, &dbr.NullEventReceiver{})
 	if err != nil {
 		return nil, fmt.Errorf("cannot open db: %s", err)
 	}
 
-	if opts.ClickhousePoolOpts != nil {
-		db.SetMaxOpenConns(opts.ClickhousePoolOpts.MaxOpenConns)
-		db.SetMaxIdleConns(opts.ClickhousePoolOpts.MaxIdleConns)
-		db.SetConnMaxLifetime(opts.ClickhousePoolOpts.ConnMaxLifetime)
+	if opts.Clickhouse.Configure != nil {
+		opts.Clickhouse.Configure(db)
 	}
 
-	return &Handler{db: db,}, nil
+	return &Handler{re: re, db: db}, nil
 }
 
 func (*Handler) SessionCreate(context.Context, *defs.SeedPhrase) (*defs.SessionID, error) {
@@ -132,17 +150,17 @@ func (h *Handler) BlocksList(ctx context.Context, req *defs.BlocksListReq) (*def
 	var retBlocks []*defs.Block1
 	for _, v := range blocks {
 		retBlocks = append(retBlocks, &defs.Block1{
-			Hash:     v.Hash,
-			HashMin:  v.Hash,
-			Height:   v.Height,
-			Time:     packTimestamp(v.Time),
+			Hash:    v.Hash,
+			HashMin: v.Hash,
+			Height:  v.Height,
+			Time:    packTimestamp(v.Time),
 			// todo Age
 			NumTxs:   v.NumTxs,
 			TotalTxs: v.TotalTxs,
 			// todo Transactions
 			// todo Events
 			// todo Validators
-			Proposer:    v.Proposer,
+			Proposer: v.Proposer,
 			// todo ProposerName
 			// todo ProposerLogo
 			BlockReward: v.BlockReward,
