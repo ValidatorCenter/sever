@@ -57,6 +57,10 @@ func NewHandler(opts *Options) (*Handler, error) {
 		return nil, fmt.Errorf("cannot open db: %s", err)
 	}
 
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("cannot ping clickhouse: %s", err)
+	}
+
 	if opts.Clickhouse.Configure != nil {
 		opts.Clickhouse.Configure(db)
 	}
