@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/golang/glog"
 	"time"
 
 	"github.com/mailru/dbr"
@@ -65,14 +66,44 @@ func NewHandler(opts *Options) (*Handler, error) {
 		opts.Clickhouse.Configure(db)
 	}
 
+	dbrLogger := &dbrLogger{}
+
 	return &Handler{
 		re: func(ctx context.Context) *redis.Client {
 			return re.WithContext(ctx)
 		},
 		db: func(ctx context.Context) *dbr.Session {
-			return db.NewSessionContext(ctx, nil)
+			return db.NewSessionContext(ctx, dbrLogger)
 		},
 	}, nil
+}
+
+type dbrLogger struct{}
+
+func (*dbrLogger) Event(eventName string) {
+	glog.Infof("I:%s", eventName)
+}
+
+func (*dbrLogger) EventKv(eventName string, kvs map[string]string) {
+	glog.Infof("I:%s %+v", eventName, kvs)
+}
+
+func (*dbrLogger) EventErr(eventName string, err error) error {
+	glog.Errorf("E:%s %+v", eventName, err);
+	return err;
+}
+
+func (*dbrLogger) EventErrKv(eventName string, err error, kvs map[string]string) error {
+	glog.Errorf("E:%s %+v %+v", eventName, err, kvs)
+	return err
+}
+
+func (*dbrLogger) Timing(eventName string, nanoseconds int64) {
+	glog.Infof("T:%s %d", eventName, nanoseconds)
+}
+
+func (*dbrLogger) TimingKv(eventName string, nanoseconds int64, kvs map[string]string) {
+	glog.Infof("T:%s %d %+v", eventName, nanoseconds, kvs)
 }
 
 func (*Handler) SessionCreate(context.Context, *defs.SeedPhrase) (*defs.SessionID, error) {
